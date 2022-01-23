@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DeepTranslator</string>
+    <string name="textInTheTextArea">Tocca per digitare il testo</string>
+</resources>
