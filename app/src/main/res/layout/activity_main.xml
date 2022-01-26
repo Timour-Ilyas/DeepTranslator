@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#8C92AC"
@@ -89,17 +90,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.78" />
+        app:layout_constraintGuide_percent="0.81" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/EditText1"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@null"
         android:gravity="top"
         android:hint="Inserisci il testo qui"
         android:inputType="textMultiLine"
         android:lines="4"
-        android:background="@null"
         android:overScrollMode="always"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
@@ -114,6 +115,11 @@
         android:id="@+id/editText2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@null"
+        android:clickable="false"
+        android:enabled="false"
+        android:focusable="false"
+        android:textColor="@android:color/black"
         android:gravity="top"
         android:inputType="textMultiLine"
         android:lines="4"
@@ -249,11 +255,26 @@
         app:layout_constraintTop_toTopOf="@+id/guideline19"
         app:layout_constraintVertical_bias="1.0" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="false"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline25"
+        app:layout_constraintEnd_toStartOf="@+id/guideline18"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/tvLingua1"
+        app:layout_constraintTop_toTopOf="@+id/guideline22"
+        app:layout_constraintVertical_bias="1.0" />
+
     <TextView
         android:id="@+id/tvLingua1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:paddingTop="5dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toStartOf="@+id/guideline17"
         app:layout_constraintStart_toStartOf="parent"
@@ -264,6 +285,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:paddingTop="5dp"
         android:text="Spagnolo"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
@@ -298,6 +320,29 @@
         app:layout_constraintStart_toStartOf="@+id/guideline17"
         app:layout_constraintTop_toTopOf="@+id/guideline22"
         app:srcCompat="@drawable/sound" />
+
+    <Button
+        android:id="@+id/buttonTraduci"
+        android:layout_width="89dp"
+        android:layout_height="103dp"
+        android:layout_marginBottom="24dp"
+        android:text="Traduci"
+        app:cornerRadius="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="73dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="36dp"
+        android:text="Traduci"
+        app:cornerRadius="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.837"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
