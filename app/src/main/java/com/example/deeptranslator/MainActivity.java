@@ -3,6 +3,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,9 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import android.speech.tts.TextToSpeech;
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,10 +27,22 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
 
     boolean scambiato = false;
+
+    private TextToSpeech mTTS;
+    private EditText mEditText;
+    private SeekBar mSeekBarPitch;
+    private SeekBar mSeekBarSpeed;
+    private Button mButtonSpeak;
+
+    private String testo1;
+    private String testo2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         lingua2.setSelection(2);
 
         Button button1 = (Button) findViewById(R.id.button1);
+        Button button3 = (Button) findViewById(R.id.button3);
         Button button4 = (Button) findViewById(R.id.button4);
 
         Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
@@ -77,6 +95,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ripeti(1);
+
+            }
+        });
+
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ripeti(2);
+
+            }
+        });
+
+
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = mTTS.setLanguage(Locale.ENGLISH);
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Linguaggio non supportato");
+                    } else {
+
+                    }
+                } else {
+                    Log.e("TTS", "Inizializzazione fallita");
+                }
+            }
+        });
+
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 suono2.setVisibility(View.VISIBLE);
                 editText2.setVisibility(View.VISIBLE);
                 editText2.setClickable(false);
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                /*StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -99,16 +152,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-// Add the request to the RequestQueue.
-                queue.add(stringRequest);
+                // Add the request to the RequestQueue.
+                queue.add(stringRequest);*/
+                editText2.setText("Hey how's it going, is everything good?");
+                testo2 = editText2.getText().toString();
+
             }
         });
 
         lingua1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
                     if(scambiato == false) {
@@ -169,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() != 0 && !((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))){
                     suono1.setVisibility(View.VISIBLE);
+                    testo1 = editText1.getText().toString();
                 }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+")))
                     suono1.setVisibility(View.GONE);
                 }
@@ -177,4 +234,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    private void ripeti(int lingua1oLingua2) {
+
+
+
+        mTTS.setPitch(1f);
+        mTTS.setSpeechRate(1f);
+
+        if(lingua1oLingua2 == 1) {
+            mTTS.speak(testo1, TextToSpeech.QUEUE_FLUSH, null);
+        }else{
+            mTTS.speak(testo2, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
+    }
+
 }
