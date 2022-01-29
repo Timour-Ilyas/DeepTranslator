@@ -27,12 +27,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean scambiato = false;
+    boolean scambiato = true;
 
     private TextToSpeech mTTS;
     private EditText mEditText;
@@ -52,10 +66,28 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://www.google.com";
+        String url ="https://api-free.deepl.com/v2/translate?auth_key=77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx&text=ciao%20mondo&target_lang=FR";
 
-        String[] arraySpinner = new String[] {
-                "Italiano", "Inglese", "Francese", "Spagnolo", "Russo", "Cinese", "Giapponese", "Tedesco"
+        HashMap<String,String> lingue = new HashMap<String,String>();
+
+        lingue.put("Italiano","IT");
+        lingue.put("Inglese","EN");
+        lingue.put("Francese","FR");
+        lingue.put("Spagnolo","ES");
+        lingue.put("Russo","RU");
+        lingue.put("Cinese","ZH");
+        lingue.put("Giapponese","JA");
+        lingue.put("Tedesco","DE");
+        lingue.put("Portoghese","PT");
+
+
+
+        String[] lingua1Array = new String[] {
+                "Italiano", "Inglese", "Francese", "Spagnolo", "Russo", "Cinese", "Giapponese", "Tedesco", "Portoghese"
+        };
+
+        String[] acronLingue = new String[] {
+                "IT", "EN", "FR", "ES", "RU", "ZH", "JA", "DE", "PT"
         };
 
         Spinner lingua1 = (Spinner) findViewById(R.id.spinner1);
@@ -68,13 +100,15 @@ public class MainActivity extends AppCompatActivity {
         ImageView suono2 = (ImageView) findViewById(R.id.Suono2);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arraySpinner);
+                android.R.layout.simple_spinner_item, lingua1Array);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lingua1.setAdapter(adapter);
         lingua2.setAdapter(adapter);
 
         lingua1.setSelection(1);
         lingua2.setSelection(2);
+
+        scambiato = false;
 
         Button button1 = (Button) findViewById(R.id.button1);
         Button button3 = (Button) findViewById(R.id.button3);
@@ -130,6 +164,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,12 +192,45 @@ public class MainActivity extends AppCompatActivity {
                 suono2.setVisibility(View.VISIBLE);
                 editText2.setVisibility(View.VISIBLE);
                 editText2.setClickable(false);
-                /*StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                String dominio = "https://api-free.deepl.com/v2/translate?";
+                String auth_key = "auth_key=77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx&";
+                String text = "text=" + (editText1.getText().toString()).replace(" ","%20") + "&";
+
+
+
+                String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
+                String url = dominio + auth_key + text + target_lang;
+
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-                                // Display the first 500 characters of the response string.
-                                editText2.setText("Response is: "+ response.substring(0,500));
+
+                                Log.d("API",response);
+
+                                try
+                                {
+                                    JSONObject j = new JSONObject(response);
+                                    JSONArray a = j.getJSONArray("translations");
+                                    JSONObject testoJSON = a.getJSONObject(0);
+
+                                    String t = null;
+                                    try {
+                                        t = new String((testoJSON.getString("text")).getBytes("ISO-8859-1"), "UTF-8");
+                                    } catch (UnsupportedEncodingException unsupportedEncodingException) {
+                                        unsupportedEncodingException.printStackTrace();
+                                    }
+
+
+                                    editText2.setText(t);
+
+                                }
+                                catch(JSONException e)
+                                {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                         }, new Response.ErrorListener() {
                     @Override
@@ -153,12 +240,39 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 // Add the request to the RequestQueue.
-                queue.add(stringRequest);*/
-                editText2.setText("Hey how's it going, is everything good?");
+                queue.add(stringRequest);
+
+                /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
+
+                //editText2.setText("Hey how's it going, is everything good?");
                 testo2 = editText2.getText().toString();
 
             }
         });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         lingua1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -228,8 +342,8 @@ public class MainActivity extends AppCompatActivity {
                     testo1 = editText1.getText().toString();
                 }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+")))
                     suono1.setVisibility(View.GONE);
-                }
-            
+            }
+
         });
 
 
