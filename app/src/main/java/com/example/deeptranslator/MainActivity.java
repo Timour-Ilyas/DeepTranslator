@@ -1,5 +1,8 @@
 package com.example.deeptranslator;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,18 +29,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String testo1;
     private String testo2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText2 = (EditText) findViewById(R.id.editText2);
         ImageView suono1 = (ImageView) findViewById(R.id.Suono1);
         ImageView suono2 = (ImageView) findViewById(R.id.Suono2);
+        ImageView copiaClipBoardImmagine = (ImageView) findViewById(R.id.imageView3);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, lingua1Array);
@@ -105,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
 
         scambiato = false;
 
-        Button button1 = (Button) findViewById(R.id.button1);
-        Button button3 = (Button) findViewById(R.id.button3);
-        Button button4 = (Button) findViewById(R.id.button4);
+        Button button1 = (Button) findViewById(R.id.pulsanteScambiaLingue);
+        Button button2 = (Button) findViewById(R.id.pulsanteDiCopia);
+        Button button3 = (Button) findViewById(R.id.pulsanteVisualizzaPrimaLingua);
+        Button button4 = (Button) findViewById(R.id.pulsanteVisualizzaSecondaLingua);
 
         Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
@@ -122,6 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 lingua2.setSelection(pos);
 
             }
+        });
+
+        button2.setOnClickListener(v -> {
+            getApplicationContext();
+            ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", editText2.getText().toString().trim());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
         });
 
         button3.setOnClickListener(new View.OnClickListener() {
@@ -182,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                button2.setClickable(true);
+                button2.setVisibility(View.VISIBLE);
+                copiaClipBoardImmagine.setVisibility(View.VISIBLE);
                 button4.setClickable(true);
                 tvLingua2.setVisibility(View.VISIBLE);
                 suono2.setVisibility(View.VISIBLE);
@@ -276,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(scambiato == false) {
+                    if(!scambiato) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -300,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                                        int position, long id) {
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(scambiato == false) {
+                    if(!scambiato) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                         scambiato = false;
