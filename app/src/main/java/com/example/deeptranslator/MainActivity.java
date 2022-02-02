@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
     private String testo1;
     private String testo2;
+    private boolean start = true;
+
+    String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
 
 
     @Override
@@ -70,44 +73,106 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<String,String> lingue = new HashMap<String,String>();
 
-        lingue.put("Italiano","IT");
-        lingue.put("Inglese","EN");
-        lingue.put("Francese","FR");
-        lingue.put("Spagnolo","ES");
-        lingue.put("Russo","RU");
-        lingue.put("Cinese","ZH");
-        lingue.put("Giapponese","JA");
-        lingue.put("Tedesco","DE");
-        lingue.put("Portoghese","PT");
+
+        lingue.put("Rileva Lingua","");
+        lingue.put("Bulgarian","BG");
+        lingue.put("Czech","CS");
+        lingue.put("Danish","DA");
+        lingue.put("German","DE");
+        lingue.put("Greek","EL");
+        lingue.put("English UK","EN-GB");
+        lingue.put("English US","EN-US");
+        lingue.put("Spanish","ES");
+        lingue.put("Estonian","ET");
+        lingue.put("Finnish","FI");
+        lingue.put("French","FR");
+        lingue.put("Hungarian","HU");
+        lingue.put("Italian","IT");
+        lingue.put("Japanese","JA");
+        lingue.put("Lithuanian","LT");
+        lingue.put("Latvian","LV");
+        lingue.put("Dutch","NL");
+        lingue.put("Polish","PL");
+        lingue.put("Portuguese (Brazilian)","PT-BR");
+        lingue.put("Portuguese (European)","PT-PT");
+        lingue.put("Romanian","RO");
+        lingue.put("Russian","RU");
+        lingue.put("Slovak","SK");
+        lingue.put("Slovenian","SL");
+        lingue.put("Swedish","SV");
+        lingue.put("Chinese","ZH");
+
+
+
+
+
+
+        HashMap<String,String> lingueVocali = new HashMap<String,String>();
+
+        lingue.put("English","ENGLISH");
+        lingue.put("Italian","ITALIAN");
+        lingue.put("Chinese","CHINESE");
+        lingue.put("French","FR");
+        lingue.put("Greek","EL");
+        lingue.put("English (British)","EN-GB");
+        lingue.put("English (American)","EN-US");
+        lingue.put("Spanish","ES");
+        lingue.put("Estonian","ET");
+
+
+
+
+
+
+
 
 
 
         String[] lingua1Array = new String[] {
-                "Italiano", "Inglese", "Francese", "Spagnolo", "Russo", "Cinese", "Giapponese", "Tedesco", "Portoghese"
+                "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English UK", "English US", "Spanish", "Estonian", "Finnish",
+                "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
+                "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
+        };
+        String[] lingua2Array = new String[] {
+                "Bulgarian", "Czech", "Danish", "German", "Greek", "English (British)", "English (American)", "Spanish", "Estonian", "Finnish",
+                "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
+                "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
         };
 
         String[] acronLingue = new String[] {
                 "IT", "EN", "FR", "ES", "RU", "ZH", "JA", "DE", "PT"
         };
 
-        Spinner lingua1 = (Spinner) findViewById(R.id.spinner1);
-        Spinner lingua2 = (Spinner) findViewById(R.id.spinner2);
-        TextView tvLingua1 = (TextView) findViewById(R.id.tvLingua1);
-        TextView tvLingua2 = (TextView) findViewById(R.id.tvLingua2);
-        EditText editText1 = (EditText) findViewById(R.id.EditText1);
-        EditText editText2 = (EditText) findViewById(R.id.editText2);
-        ImageView suono1 = (ImageView) findViewById(R.id.Suono1);
-        ImageView suono2 = (ImageView) findViewById(R.id.Suono2);
+        Spinner lingua1 =  findViewById(R.id.spinner1);
+        Spinner lingua2 =  findViewById(R.id.spinner2);
+        TextView tvLingua1 =  findViewById(R.id.tvLingua1);
+        TextView tvLingua2 =  findViewById(R.id.tvLingua2);
+        EditText editText1 =  findViewById(R.id.EditText1);
+        EditText editText2 =  findViewById(R.id.editText2);
+        ImageView suono1 =  findViewById(R.id.Suono1);
+        ImageView suono2 =  findViewById(R.id.Suono2);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ImageView imageView2 = findViewById(R.id.imageView2);
+        ImageView imageView3 = findViewById(R.id.imageView3);
+        ImageView imageView5 = findViewById(R.id.imageView5);
+
+
+        //Si definisce lo stile di apertura degli spinner e gli si assegna un array di valori
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, lingua1Array);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lingua1.setAdapter(adapter);
-        lingua2.setAdapter(adapter);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        lingua1.setSelection(1);
-        lingua2.setSelection(2);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, lingua2Array);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+        lingua1.setAdapter(adapter1);
+        lingua2.setAdapter(adapter2);
+
+        lingua1.setSelection(0);
+        lingua2.setSelection(1);
+
+        start = false;
         scambiato = false;
 
         Button button1 = (Button) findViewById(R.id.button1);
@@ -121,10 +186,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int pos;
+                String appoggio = editText1.getText().toString();
+                String appoggioTesto = testo1;
+
                 pos = lingua1.getSelectedItemPosition();
                 scambiato = true;
+
                 lingua1.setSelection(lingua2.getSelectedItemPosition());
-                lingua2.setSelection(pos);
+                editText1.setText(editText2.getText().toString());
+                testo1 = testo2;
+
+                lingua2.setSelection(pos+1);
+                editText2.setText(appoggio);
+                testo2 = appoggioTesto;
 
             }
         });
@@ -132,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ripeti(1);
+                ripeti(1, lingua1.getSelectedItem().toString());
 
             }
         });
@@ -140,35 +214,10 @@ public class MainActivity extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ripeti(2);
+                ripeti(2, tvLingua2.getText().toString());
 
             }
         });
-
-
-        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int result = mTTS.setLanguage(Locale.ENGLISH);
-
-                    if (result == TextToSpeech.LANG_MISSING_DATA
-                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "Linguaggio non supportato");
-                    } else {
-
-                    }
-                } else {
-                    Log.e("TTS", "Inizializzazione fallita");
-                }
-            }
-        });
-
-
-
-
-
-
 
 
 
@@ -192,13 +241,21 @@ public class MainActivity extends AppCompatActivity {
                 suono2.setVisibility(View.VISIBLE);
                 editText2.setVisibility(View.VISIBLE);
                 editText2.setClickable(false);
+                imageView3.setVisibility(View.VISIBLE);
+                imageView5.setVisibility(View.VISIBLE);
                 String dominio = "https://api-free.deepl.com/v2/translate?";
-                String auth_key = "auth_key=77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx&";
+                String auth_key = "auth_key=" + authKey + "&";
                 String text = "text=" + (editText1.getText().toString()).replace(" ","%20") + "&";
-
-
-
                 String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
+
+                if(lingua1.getSelectedItemPosition() != 0) {
+                    String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem() + "&");
+                    String url = dominio + auth_key + text + source_lang + target_lang;
+                }else{
+                    String url = dominio + auth_key + text + target_lang;
+                }
+
+
                 String url = dominio + auth_key + text + target_lang;
 
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -223,7 +280,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     editText2.setText(t);
-
+                                    System.out.println("Lezzo:  " + editText2.getText().toString());
+                                    testo2 = editText2.getText().toString();
+                                    System.out.println("Lezzo2:  " + testo2);
                                 }
                                 catch(JSONException e)
                                 {
@@ -239,13 +298,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
+
+                tvLingua2.setText(lingua2.getSelectedItem().toString());
+                //editText2.setText("Hey how's it going, is everything good?");
+
+
                 // Add the request to the RequestQueue.
                 queue.add(stringRequest);
 
-                /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
 
-                //editText2.setText("Hey how's it going, is everything good?");
-                testo2 = editText2.getText().toString();
+
 
             }
         });
@@ -261,7 +324,24 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
 
+
+                    int result = mTTS.setLanguage(Locale.ITALIAN);
+                    if (result == TextToSpeech.LANG_MISSING_DATA
+                            || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "Linguaggio non supportato");
+                    } else {
+
+                    }
+                } else {
+                    Log.e("TTS", "Inizializzazione fallita");
+                }
+            }
+        });
 
 
 
@@ -281,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(scambiato == false) {
+                    if(scambiato == false && start == false) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -305,14 +385,14 @@ public class MainActivity extends AppCompatActivity {
                                        int position, long id) {
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(scambiato == false) {
+                    if(scambiato == false && start == false) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                         scambiato = false;
                     }
                 }
 
-                tvLingua2.setText(lingua2.getSelectedItem().toString());
+
 
             }
 
@@ -339,18 +419,65 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() != 0 && !((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))){
                     suono1.setVisibility(View.VISIBLE);
+                    imageView2.setVisibility(View.VISIBLE);
+
                     testo1 = editText1.getText().toString();
                 }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+")))
                     suono1.setVisibility(View.GONE);
+                    imageView2.setVisibility(View.GONE);
+
+
             }
 
         });
 
 
     }
-    private void ripeti(int lingua1oLingua2) {
+    private void ripeti(int lingua1oLingua2, String lingua) {
 
+        System.out.println("lingua: " + lingua);
 
+        int result = 0;
+        switch(lingua){
+            case "Italian":
+                result = mTTS.setLanguage(Locale.ITALIAN);
+                break;
+
+            case "Chinese":
+                result = mTTS.setLanguage(Locale.CHINESE);
+                break;
+
+            case "French":
+
+                result = mTTS.setLanguage(Locale.FRENCH);
+                break;
+
+            case "German":
+                result = mTTS.setLanguage(Locale.GERMAN);
+                break;
+
+            case "Japanese":
+                result = mTTS.setLanguage(Locale.JAPANESE);
+                break;
+
+            case "English UK":
+                result = mTTS.setLanguage(Locale.UK);
+                break;
+
+            case "English US":
+                result = mTTS.setLanguage(Locale.US);
+                break;
+            default:
+
+                break;
+        }
+
+        if (result == TextToSpeech.LANG_MISSING_DATA
+                || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            Log.e("TTS", "Linguaggio non supportato");
+        } else {
+
+        }
 
         mTTS.setPitch(1f);
         mTTS.setSpeechRate(1f);
