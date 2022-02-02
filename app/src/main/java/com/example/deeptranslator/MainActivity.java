@@ -1,5 +1,8 @@
 package com.example.deeptranslator;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,33 +19,19 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.speech.tts.TextToSpeech;
-
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean start = true;
 
     String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,14 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         String[] lingua1Array = new String[] {
-                "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English UK", "English US", "Spanish", "Estonian", "Finnish",
-                "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
-                "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
-        };
-        String[] lingua2Array = new String[] {
-                "Bulgarian", "Czech", "Danish", "German", "Greek", "English (British)", "English (American)", "Spanish", "Estonian", "Finnish",
-                "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
-                "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
+                "Italiano", "Inglese", "Francese", "Spagnolo", "Russo", "Cinese", "Giapponese", "Tedesco", "Portoghese"
         };
 
         String[] acronLingue = new String[] {
@@ -151,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         EditText editText2 =  findViewById(R.id.editText2);
         ImageView suono1 =  findViewById(R.id.Suono1);
         ImageView suono2 =  findViewById(R.id.Suono2);
-
+        ImageView copiaClipBoardImmagine = (ImageView) findViewById(R.id.imageView3);
         ImageView imageView2 = findViewById(R.id.imageView2);
         ImageView imageView3 = findViewById(R.id.imageView3);
         ImageView imageView5 = findViewById(R.id.imageView5);
@@ -175,9 +156,10 @@ public class MainActivity extends AppCompatActivity {
         start = false;
         scambiato = false;
 
-        Button button1 = (Button) findViewById(R.id.button1);
-        Button button3 = (Button) findViewById(R.id.button3);
-        Button button4 = (Button) findViewById(R.id.button4);
+        Button button1 = (Button) findViewById(R.id.pulsanteScambiaLingue);
+        Button button2 = (Button) findViewById(R.id.pulsanteDiCopia);
+        Button button3 = (Button) findViewById(R.id.pulsanteVisualizzaPrimaLingua);
+        Button button4 = (Button) findViewById(R.id.pulsanteVisualizzaSecondaLingua);
 
         Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
@@ -201,6 +183,14 @@ public class MainActivity extends AppCompatActivity {
                 testo2 = appoggioTesto;
 
             }
+        });
+
+        button2.setOnClickListener(v -> {
+            getApplicationContext();
+            ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", editText2.getText().toString().trim());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
         });
 
         button3.setOnClickListener(new View.OnClickListener() {
@@ -233,16 +223,30 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                button2.setClickable(true);
+                button2.setVisibility(View.VISIBLE);
+
+                copiaClipBoardImmagine.setVisibility(View.VISIBLE);
                 button4.setClickable(true);
                 tvLingua2.setVisibility(View.VISIBLE);
                 suono2.setVisibility(View.VISIBLE);
+
                 editText2.setVisibility(View.VISIBLE);
                 editText2.setClickable(false);
+
                 imageView3.setVisibility(View.VISIBLE);
                 imageView5.setVisibility(View.VISIBLE);
+
+
                 String dominio = "https://api-free.deepl.com/v2/translate?";
                 String auth_key = "auth_key=" + authKey + "&";
                 String text = "text=" + (editText1.getText().toString()).replace(" ","%20") + "&";
@@ -280,9 +284,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     editText2.setText(t);
-                                    System.out.println("Lezzo:  " + editText2.getText().toString());
+
                                     testo2 = editText2.getText().toString();
-                                    System.out.println("Lezzo2:  " + testo2);
+
                                 }
                                 catch(JSONException e)
                                 {
