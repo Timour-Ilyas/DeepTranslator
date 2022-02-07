@@ -1,15 +1,23 @@
 package com.example.deeptranslator;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private String testo1;
     private String testo2;
     private boolean start = true;
+    private boolean avanti = false;
 
     String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
+    private EditText editText1;
+    private EditText editText2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //Si crea un dizionario per associare alle lingue la eventualmente disponibile riproduzione vocale
         HashMap<String,String> lingueVocali = new HashMap<String,String>();
 
         lingue.put("English","ENGLISH");
@@ -115,10 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //Si definiscono le lingue sia per il primo che per il secondo spinner
         String[] lingua1Array = new String[] {
-                "Italiano", "Inglese", "Francese", "Spagnolo", "Russo", "Cinese", "Giapponese", "Tedesco", "Portoghese"
+                "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English UK", "English US", "Spanish", "Estonian",
+                "Finnish", "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)",
+                "Portuguese (European)", "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
         };
+        String[] lingua2Array = new String[] {
+                "Bulgarian", "Czech", "Danish", "German", "Greek", "English (British)", "English (American)", "Spanish", "Estonian", "Finnish",
+                "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
+                "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
+        };
+
 
         String[] acronLingue = new String[] {
                 "IT", "EN", "FR", "ES", "RU", "ZH", "JA", "DE", "PT"
@@ -126,10 +145,23 @@ public class MainActivity extends AppCompatActivity {
 
         Spinner lingua1 =  findViewById(R.id.spinner1);
         Spinner lingua2 =  findViewById(R.id.spinner2);
+
         TextView tvLingua1 =  findViewById(R.id.tvLingua1);
         TextView tvLingua2 =  findViewById(R.id.tvLingua2);
-        EditText editText1 =  findViewById(R.id.EditText1);
-        EditText editText2 =  findViewById(R.id.editText2);
+
+        editText1 =  findViewById(R.id.EditText1);
+        editText2 =  findViewById(R.id.editText2);
+
+
+
+
+        //Animazioni per le edit Text
+        ObjectAnimator animationAvanti = ObjectAnimator.ofFloat(editText1, "translationX", 330f);
+        animationAvanti.setDuration(500);
+        ObjectAnimator animationIndietro = ObjectAnimator.ofFloat(editText1, "translationX", 0);
+        animationIndietro.setDuration(500);
+
+
         ImageView suono1 =  findViewById(R.id.Suono1);
         ImageView suono2 =  findViewById(R.id.Suono2);
         ImageView copiaClipBoardImmagine = (ImageView) findViewById(R.id.imageView3);
@@ -140,12 +172,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Si definisce lo stile di apertura degli spinner e gli si assegna un array di valori
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, lingua1Array);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_item, lingua1Array);
+        adapter1.setDropDownViewResource(R.layout.stile_spinner_dropdown);
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, lingua2Array);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_item, lingua2Array);
+        adapter2.setDropDownViewResource(R.layout.stile_spinner_dropdown);
 
         lingua1.setAdapter(adapter1);
         lingua2.setAdapter(adapter2);
@@ -157,16 +189,63 @@ public class MainActivity extends AppCompatActivity {
         scambiato = false;
 
         Button button1 = (Button) findViewById(R.id.pulsanteScambiaLingue);
-        Button button2 = (Button) findViewById(R.id.pulsanteDiCopia);
+        Button buttonCopia = (Button) findViewById(R.id.pulsanteDiCopia2);
+        Button buttonCopia2 = (Button) findViewById(R.id.pulsanteDiCopia);
         Button button3 = (Button) findViewById(R.id.pulsanteVisualizzaPrimaLingua);
         Button button4 = (Button) findViewById(R.id.pulsanteVisualizzaSecondaLingua);
 
         Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
 
+
+        //si definisce il colore del testo dell'oggetto selezionato nello spinner per la scelta della lingua
+        lingua1.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                removeFocus();
+                return false;
+            }
+
+        });
+
+        lingua2.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                removeFocus();
+                return false;
+            }
+
+        });
+
+
+        buttonCopia.setOnClickListener(v -> {
+            removeFocus();
+            getApplicationContext();
+            ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", editText1.getText().toString().trim());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
+        });
+
+        buttonCopia2.setOnClickListener(v -> {
+            removeFocus();
+            getApplicationContext();
+            ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", editText2.getText().toString().trim());
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
+        });
+
+
+
+
+
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                removeFocus();
                 int pos;
                 String appoggio = editText1.getText().toString();
                 String appoggioTesto = testo1;
@@ -185,17 +264,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button2.setOnClickListener(v -> {
-            getApplicationContext();
-            ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("", editText2.getText().toString().trim());
-            clipboard.setPrimaryClip(clip);
-            Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
-        });
+
 
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                removeFocus();
                 ripeti(1, lingua1.getSelectedItem().toString());
 
             }
@@ -204,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                removeFocus();
                 ripeti(2, tvLingua2.getText().toString());
 
             }
@@ -232,8 +307,9 @@ public class MainActivity extends AppCompatActivity {
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                button2.setClickable(true);
-                button2.setVisibility(View.VISIBLE);
+                removeFocus();
+                buttonCopia2.setClickable(true);
+                buttonCopia2.setVisibility(View.VISIBLE);
 
                 copiaClipBoardImmagine.setVisibility(View.VISIBLE);
                 button4.setClickable(true);
@@ -407,6 +483,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        editText1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(avanti == false) {
+                    animationAvanti.start();
+                    spostaTesto();
+                    avanti = true;
+                }else{
+                    animationIndietro.start();
+                    avanti = false;
+                }
+            }
+        });
+/*
+        editText1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(avanti == false) {
+                    animationAvanti.start();
+                    avanti = true;
+                }else{
+                    animationIndietro.start();
+                    avanti = false;
+                }
+            }
+        });*/
+
         editText1.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -421,6 +525,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if (s.length() != 0 && !((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))){
                     suono1.setVisibility(View.VISIBLE);
                     imageView2.setVisibility(View.VISIBLE);
@@ -493,5 +598,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    public void removeFocus(){
+        editText1.clearFocus();
+        float scale = getResources().getDisplayMetrics().density;
+        int pLeft = (int) (130*scale + 0.5f);
+        int pTop = (int) (10*scale + 0.5f);
+        editText1.setPadding(pLeft,pTop,0,0);
+        editText1.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+
+
+    }
+
+    public void spostaTesto(){
+
+        editText1.setPadding(125,10,125,0);
+        editText1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+    }
 
 }
+
