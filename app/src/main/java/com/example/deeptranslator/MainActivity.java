@@ -1,5 +1,6 @@
 package com.example.deeptranslator;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.animation.ObjectAnimator;
 import android.content.ClipData;
@@ -56,9 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean start = true;
     private boolean avanti = false;
 
-    String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
+    private String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
     private EditText editText1;
     private EditText editText2;
+    private HashMap<String,String> lingue;
+    private HashMap<String,String> lingueVocali;
+
+    private boolean inseritoQualcosa = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +73,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="https://api-free.deepl.com/v2/translate?auth_key=77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx&text=ciao%20mondo&target_lang=FR";
 
-        HashMap<String,String> lingue = new HashMap<String,String>();
+        lingue = new HashMap<String,String>();
 
 
         lingue.put("Rileva Lingua","");
@@ -79,8 +83,7 @@ public class MainActivity extends AppCompatActivity {
         lingue.put("Danish","DA");
         lingue.put("German","DE");
         lingue.put("Greek","EL");
-        lingue.put("English UK","EN-GB");
-        lingue.put("English US","EN-US");
+        lingue.put("English","EN");
         lingue.put("Spanish","ES");
         lingue.put("Estonian","ET");
         lingue.put("Finnish","FI");
@@ -106,17 +109,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Si crea un dizionario per associare alle lingue la eventualmente disponibile riproduzione vocale
-        HashMap<String,String> lingueVocali = new HashMap<String,String>();
+        lingueVocali = new HashMap<String,String>();
 
-        lingue.put("English","ENGLISH");
-        lingue.put("Italian","ITALIAN");
-        lingue.put("Chinese","CHINESE");
-        lingue.put("French","FR");
-        lingue.put("Greek","EL");
-        lingue.put("English (British)","EN-GB");
-        lingue.put("English (American)","EN-US");
-        lingue.put("Spanish","ES");
-        lingue.put("Estonian","ET");
+        lingueVocali.put("English","UK");
+        lingueVocali.put("Italian","ITALIAN");
+        lingueVocali.put("Chinese","CHINESE");
+        lingueVocali.put("French","FR");
+        lingueVocali.put("Japanese","JP");
+        lingueVocali.put("German","DE");
 
 
 
@@ -128,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Si definiscono le lingue sia per il primo che per il secondo spinner
         String[] lingua1Array = new String[] {
-                "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English UK", "English US", "Spanish", "Estonian",
+                "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English", "Spanish", "Estonian",
                 "Finnish", "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)",
                 "Portuguese (European)", "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
         };
         String[] lingua2Array = new String[] {
-                "Bulgarian", "Czech", "Danish", "German", "Greek", "English (British)", "English (American)", "Spanish", "Estonian", "Finnish",
+                "Bulgarian", "Czech", "Danish", "German", "Greek", "English", "Spanish", "Estonian", "Finnish",
                 "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
                 "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
         };
@@ -151,14 +151,27 @@ public class MainActivity extends AppCompatActivity {
 
         editText1 =  findViewById(R.id.EditText1);
         editText2 =  findViewById(R.id.editText2);
+        editText2.setKeyListener(null) ;
 
 
+
+        ConstraintLayout cr = findViewById(R.id.ed);
+        cr.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                removeFocus();
+                return true;//always return true to consume event
+            }
+        });
 
 
         //Animazioni per le edit Text
         ObjectAnimator animationAvanti = ObjectAnimator.ofFloat(editText1, "translationX", 330f);
         animationAvanti.setDuration(500);
         ObjectAnimator animationIndietro = ObjectAnimator.ofFloat(editText1, "translationX", 0);
+        animationIndietro.setDuration(500);
+
+        ObjectAnimator animationTradottoAvanti = ObjectAnimator.ofFloat(editText2, "translationX", 975f);
         animationIndietro.setDuration(500);
 
 
@@ -209,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
+
         lingua2.setOnTouchListener(new View.OnTouchListener(){
 
             @Override
@@ -246,20 +261,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
-                int pos;
-                String appoggio = editText1.getText().toString();
-                String appoggioTesto = testo1;
 
-                pos = lingua1.getSelectedItemPosition();
-                scambiato = true;
+                if(lingua1.getSelectedItemPosition() != 0) {
+                    int pos;
+                    String appoggio = editText1.getText().toString();
+                    String appoggioTesto = testo1;
 
-                lingua1.setSelection(lingua2.getSelectedItemPosition());
-                editText1.setText(editText2.getText().toString());
-                testo1 = testo2;
+                    pos = lingua1.getSelectedItemPosition();
+                    scambiato = true;
 
-                lingua2.setSelection(pos+1);
-                editText2.setText(appoggio);
-                testo2 = appoggioTesto;
+                    lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
+                    editText1.setText(editText2.getText().toString());
+                    testo1 = testo2;
+
+                    lingua2.setSelection(pos - 1);
+                    editText2.setText(appoggio);
+                    testo2 = appoggioTesto;
+                }else{
+                    Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
+                            Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -312,9 +333,18 @@ public class MainActivity extends AppCompatActivity {
                 buttonCopia2.setVisibility(View.VISIBLE);
 
                 copiaClipBoardImmagine.setVisibility(View.VISIBLE);
-                button4.setClickable(true);
+
                 tvLingua2.setVisibility(View.VISIBLE);
-                suono2.setVisibility(View.VISIBLE);
+
+
+                if(lingueVocali.get(lingua2.getSelectedItem().toString()) != null) {
+                    suono2.setVisibility(View.VISIBLE);
+                    button4.setClickable(true);
+
+                }else {
+                    suono2.setVisibility(View.INVISIBLE);
+                    button4.setClickable(false);
+                }
 
                 editText2.setVisibility(View.VISIBLE);
                 editText2.setClickable(false);
@@ -328,15 +358,19 @@ public class MainActivity extends AppCompatActivity {
                 String text = "text=" + (editText1.getText().toString()).replace(" ","%20") + "&";
                 String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
 
+                String url = "";
+
+                System.out.println("Leroleroleroleroelro: " + lingue.get(lingua1.getSelectedItem()));
+
                 if(lingua1.getSelectedItemPosition() != 0) {
-                    String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem() + "&");
-                    String url = dominio + auth_key + text + source_lang + target_lang;
+                    String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem()) + "&";
+                    url = dominio + auth_key + text + source_lang + target_lang;
                 }else{
-                    String url = dominio + auth_key + text + target_lang;
+                    url = dominio + auth_key + text + target_lang;
                 }
 
 
-                String url = dominio + auth_key + text + target_lang;
+
 
                 StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                         new Response.Listener<String>() {
@@ -386,6 +420,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // Add the request to the RequestQueue.
                 queue.add(stringRequest);
+                animationTradottoAvanti.start();
+
 
 
 
@@ -448,6 +484,27 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 tvLingua1.setText(lingua1.getSelectedItem().toString());
+                //Se si cambia lingua quando il testo è già scritto si controlla che la lingua sia riproducibile o meno dal sintetizzatore
+                if(inseritoQualcosa == true){
+                    if (lingueVocali.get(lingua1.getSelectedItem().toString()) != null) {
+                        suono1.setVisibility(View.VISIBLE);
+                        button3.setClickable(true);
+                        Log.e("CIAO_1: ", "Sono passato dall'if, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+
+                    } else {
+                        suono1.setVisibility(View.INVISIBLE);
+                        button3.setClickable(false);
+                        Log.e("CIAO_2: ", "Sono passato dall'else, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+                    }
+
+                }else{
+                    suono1.setVisibility(View.GONE);
+                    button3.setClickable(false);
+                    Log.e("hellooooooO: ", "Sono passato dall'elseMAGGIORE, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+                }
+
+
+
 
             }
 
@@ -526,15 +583,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+
                 if (s.length() != 0 && !((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))){
-                    suono1.setVisibility(View.VISIBLE);
-                    imageView2.setVisibility(View.VISIBLE);
+                    //Si mostra il bottone per replicare vocalmente solo se la lingua è presente tra quelle sintetizzabili
+                    if(lingueVocali.get(lingua1.getSelectedItem()) != null) {
+                        suono1.setVisibility(View.VISIBLE);
+                        button3.setClickable(true);
+                        Log.e("SIUM1: ", "Sono stato dal barbiere1, " + lingua1.getSelectedItem().toString());
 
+                    }else {
+                        suono1.setVisibility(View.INVISIBLE);
+                        button3.setClickable(false);
+                        Log.e("SIUM2: ", "Sono stato dal dentista2, " + lingueVocali.get(lingua1.getSelectedItem()));
+
+                    }
+                    inseritoQualcosa = true;
                     testo1 = editText1.getText().toString();
-                }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+")))
+                }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))) {
                     suono1.setVisibility(View.GONE);
-                    imageView2.setVisibility(View.GONE);
-
+                    button3.setClickable(false);
+                    inseritoQualcosa = false;
+                    Log.e("KEKZ: ", "Sono stato dal dentista965");
+                }
 
             }
 
@@ -545,6 +615,8 @@ public class MainActivity extends AppCompatActivity {
     private void ripeti(int lingua1oLingua2, String lingua) {
 
         System.out.println("lingua: " + lingua);
+
+
 
         int result = 0;
         switch(lingua){
@@ -569,32 +641,27 @@ public class MainActivity extends AppCompatActivity {
                 result = mTTS.setLanguage(Locale.JAPANESE);
                 break;
 
-            case "English UK":
+            case "English":
                 result = mTTS.setLanguage(Locale.UK);
                 break;
-
-            case "English US":
-                result = mTTS.setLanguage(Locale.US);
-                break;
             default:
-
                 break;
         }
 
-        if (result == TextToSpeech.LANG_MISSING_DATA
-                || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            Log.e("TTS", "Linguaggio non supportato");
+        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            //Log.e("TTS", "Linguaggio non supportato");
+            Toast.makeText(MainActivity.this, "Linguaggio non supportato", Toast.LENGTH_LONG).show();
+
         } else {
 
-        }
+            mTTS.setPitch(1f);
+            mTTS.setSpeechRate(1f);
 
-        mTTS.setPitch(1f);
-        mTTS.setSpeechRate(1f);
-
-        if(lingua1oLingua2 == 1) {
-            mTTS.speak(testo1, TextToSpeech.QUEUE_FLUSH, null);
-        }else{
-            mTTS.speak(testo2, TextToSpeech.QUEUE_FLUSH, null);
+            if (lingua1oLingua2 == 1) {
+                mTTS.speak(testo1, TextToSpeech.QUEUE_FLUSH, null);
+            } else {
+                mTTS.speak(testo2, TextToSpeech.QUEUE_FLUSH, null);
+            }
         }
 
     }
@@ -614,6 +681,9 @@ public class MainActivity extends AppCompatActivity {
         editText1.setPadding(125,10,125,0);
         editText1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
+
+
+
 
 }
 

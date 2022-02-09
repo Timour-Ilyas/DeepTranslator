@@ -78,14 +78,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.62" />
+        app:layout_constraintGuide_percent="0.63" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.69" />
+        app:layout_constraintGuide_percent="0.71" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline38"
@@ -158,6 +158,13 @@
         app:layout_constraintGuide_percent="0.79" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline37"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -215,6 +222,7 @@
         android:overScrollMode="always"
         android:paddingLeft="130dp"
         android:paddingTop="10dp"
+        android:paddingRight="40dp"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
@@ -232,24 +240,26 @@
         android:id="@+id/editText2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/stile_cardview"
+        android:background="@drawable/tradotto_forma"
         android:backgroundTint="@null"
-        android:clickable="false"
-        android:enabled="false"
-        android:focusable="false"
+
         android:gravity="top"
         android:inputType="textMultiLine"
         android:lines="4"
         android:overScrollMode="always"
+        android:paddingLeft="3dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="40dp"
         android:scrollbarStyle="insideInset"
         android:scrollbars="vertical"
         android:scrollHorizontally="false"
+        android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@android:color/black"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline27"
-        app:layout_constraintStart_toStartOf="@+id/guideline8"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline44"
         app:layout_constraintTop_toTopOf="@+id/guideline36" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -328,6 +338,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="-0.30" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline44"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="-0.90" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline5"
@@ -426,6 +443,7 @@
         android:layout_height="0dp"
         android:background="?android:attr/selectableItemBackground"
         app:cornerRadius="50dp"
+        android:clickable="false"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toStartOf="@+id/guideline18"
         app:layout_constraintHorizontal_bias="1.0"
@@ -572,7 +590,7 @@
         android:layout_height="0dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="false"
-        android:elevation="5dp"
+        android:elevation="8dp"
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline48"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
@@ -621,7 +639,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline36"
+        app:layout_constraintTop_toTopOf="@+id/guideline35"
         app:srcCompat="@drawable/ic_baseline_content_copy_24" />
 
     <TextView
@@ -646,7 +664,7 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintStart_toStartOf="@+id/guideline34"
-        app:layout_constraintTop_toTopOf="@+id/guideline25" />
+        app:layout_constraintTop_toTopOf="@+id/guideline36" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
