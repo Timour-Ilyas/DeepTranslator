@@ -181,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView imageView2 = findViewById(R.id.imageView2);
         ImageView imageView3 = findViewById(R.id.imageView3);
         ImageView imageView5 = findViewById(R.id.imageView5);
+        TextView tvFunzioni2 = findViewById(R.id.TVfunzioni2);
 
 
         //Si definisce lo stile di apertura degli spinner e gli si assegna un array di valori
@@ -206,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
         Button buttonCopia2 = (Button) findViewById(R.id.pulsanteDiCopia);
         Button button3 = (Button) findViewById(R.id.pulsanteVisualizzaPrimaLingua);
         Button button4 = (Button) findViewById(R.id.pulsanteVisualizzaSecondaLingua);
+
+        Button buttonSalvataggio = (Button) findViewById(R.id.pulsanteDiSalvataggio);
 
         Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
@@ -421,6 +424,11 @@ public class MainActivity extends AppCompatActivity {
                 // Add the request to the RequestQueue.
                 queue.add(stringRequest);
                 animationTradottoAvanti.start();
+                tvFunzioni2.setVisibility(View.VISIBLE);
+                imageView5.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.VISIBLE);
+                buttonCopia2.setVisibility(View.VISIBLE);
+                buttonSalvataggio.setVisibility(View.VISIBLE);
 
 
 
