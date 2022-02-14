@@ -1,28 +1,30 @@
 package com.example.deeptranslator;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +35,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
     boolean scambiato = true;
 
     private TextToSpeech mTTS;
+    private EditText mEditText;
+    private SeekBar mSeekBarPitch;
+    private SeekBar mSeekBarSpeed;
+    private Button mButtonSpeak;
 
     private String testo1;
     private String testo2;
@@ -53,17 +58,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean avanti = false;
 
     private String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
-    private EditText boxInserimento;
-    private EditText boxTradotto;
+    private EditText editText1;
+    private EditText editText2;
     private HashMap<String,String> lingue;
     private HashMap<String,String> lingueVocali;
 
     private boolean inseritoQualcosa = false;
-
-    private Toolbar toolbar;
-    private DrawerLayout drawer;
-    private NavigationView navigationView;
-    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,45 +72,10 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
-        drawer = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-
-        drawer.closeDrawer(navigationView);
-
-
-        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.cronologia:
-                        Toast.makeText(MainActivity.this, "Cronologia selezionato",Toast.LENGTH_SHORT).show();
-                        drawer.closeDrawers();
-                        break;
-                    case R.id.salvati:
-                        Toast.makeText(MainActivity.this, "Salvati selezionato",Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.impostazioni:
-                        Toast.makeText(MainActivity.this, "Impostazioni selezionato",Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                drawer.closeDrawer(GravityCompat.START);
-
-                return true;
-            }
-        });
-
         RequestQueue queue = Volley.newRequestQueue(this);
 
         lingue = new HashMap<String,String>();
+
 
         lingue.put("Rileva Lingua","");
         lingue.put("Bulgarian","BG");
@@ -184,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
         TextView tvLingua1 =  findViewById(R.id.tvLingua1);
         TextView tvLingua2 =  findViewById(R.id.tvLingua2);
 
-        boxInserimento =  findViewById(R.id.etInserimentoMessaggio);
-        boxTradotto =  findViewById(R.id.etMessaggioTradotto);
-        boxTradotto.setKeyListener(null) ;
+        editText1 =  findViewById(R.id.EditText1);
+        editText2 =  findViewById(R.id.editText2);
+        editText2.setKeyListener(null) ;
 
 
 
@@ -201,20 +166,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Animazioni per le edit Text
-        ObjectAnimator animationAvanti = ObjectAnimator.ofFloat(boxInserimento, "translationX", 330f);
+        ObjectAnimator animationAvanti = ObjectAnimator.ofFloat(editText1, "translationX", 330f);
         animationAvanti.setDuration(500);
-        ObjectAnimator animationIndietro = ObjectAnimator.ofFloat(boxInserimento, "translationX", 0);
+        ObjectAnimator animationIndietro = ObjectAnimator.ofFloat(editText1, "translationX", 0);
         animationIndietro.setDuration(500);
 
-        ObjectAnimator animationTradottoAvanti = ObjectAnimator.ofFloat(boxTradotto, "translationX", 975f);
+        ObjectAnimator animationTradottoAvanti = ObjectAnimator.ofFloat(editText2, "translationX", 975f);
         animationIndietro.setDuration(500);
 
 
         ImageView suono1 =  findViewById(R.id.Suono1);
         ImageView suono2 =  findViewById(R.id.Suono2);
-        ImageView copiaClipBoardImmagine = findViewById(R.id.immagineCopiaMessaggioInserito);
-        ImageView immagineCopia = findViewById(R.id.immaginePulsanteCopia);
-        ImageView immaginePreferiti = findViewById(R.id.immaginePulsantePreferiti);
+        ImageView copiaClipBoardImmagine = (ImageView) findViewById(R.id.imageView3);
+        ImageView imageView2 = findViewById(R.id.imageView2);
+        ImageView imageView3 = findViewById(R.id.imageView3);
+        ImageView imageView5 = findViewById(R.id.imageView5);
         TextView tvFunzioni2 = findViewById(R.id.TVfunzioni2);
 
 
@@ -236,15 +202,15 @@ public class MainActivity extends AppCompatActivity {
         start = false;
         scambiato = false;
 
-        Button button1 = findViewById(R.id.pulsanteScambiaLingue);
-        Button buttonCopia = findViewById(R.id.pulsanteDiCopia2);
-        Button buttonCopia2 = findViewById(R.id.pulsanteDiCopia);
-        Button button3 = findViewById(R.id.pulsanteVisualizzaPrimaLingua);
-        Button button4 = findViewById(R.id.pulsanteVisualizzaSecondaLingua);
+        Button button1 = (Button) findViewById(R.id.pulsanteScambiaLingue);
+        Button buttonCopia = (Button) findViewById(R.id.pulsanteDiCopia2);
+        Button buttonCopia2 = (Button) findViewById(R.id.pulsanteDiCopia);
+        Button button3 = (Button) findViewById(R.id.pulsanteVisualizzaPrimaLingua);
+        Button button4 = (Button) findViewById(R.id.pulsanteVisualizzaSecondaLingua);
 
-        Button buttonSalvataggio = findViewById(R.id.pulsanteDiSalvataggio);
+        Button buttonSalvataggio = (Button) findViewById(R.id.pulsanteDiSalvataggio);
 
-        Button buttonTraduci = findViewById(R.id.buttonTraduci);
+        Button buttonTraduci = (Button) findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
 
 
@@ -276,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
             removeFocus();
             getApplicationContext();
             ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("", boxInserimento.getText().toString().trim());
+            ClipData clip = ClipData.newPlainText("", editText1.getText().toString().trim());
             clipboard.setPrimaryClip(clip);
             Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
         });
@@ -285,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
             removeFocus();
             getApplicationContext();
             ClipboardManager clipboard = (ClipboardManager)getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("", boxTradotto.getText().toString().trim());
+            ClipData clip = ClipData.newPlainText("", editText2.getText().toString().trim());
             clipboard.setPrimaryClip(clip);
             Toast.makeText(getApplicationContext(), "Copiato!", Toast.LENGTH_LONG).show();
         });
@@ -301,18 +267,18 @@ public class MainActivity extends AppCompatActivity {
 
                 if(lingua1.getSelectedItemPosition() != 0) {
                     int pos;
-                    String appoggio = boxInserimento.getText().toString();
+                    String appoggio = editText1.getText().toString();
                     String appoggioTesto = testo1;
 
                     pos = lingua1.getSelectedItemPosition();
                     scambiato = true;
 
                     lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
-                    boxInserimento.setText(boxTradotto.getText().toString());
+                    editText1.setText(editText2.getText().toString());
                     testo1 = testo2;
 
                     lingua2.setSelection(pos - 1);
-                    boxTradotto.setText(appoggio);
+                    editText2.setText(appoggio);
                     testo2 = appoggioTesto;
                 }else{
                     Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
@@ -383,16 +349,16 @@ public class MainActivity extends AppCompatActivity {
                     button4.setClickable(false);
                 }
 
-                boxTradotto.setVisibility(View.VISIBLE);
-                boxTradotto.setClickable(false);
+                editText2.setVisibility(View.VISIBLE);
+                editText2.setClickable(false);
 
-                copiaClipBoardImmagine.setVisibility(View.VISIBLE);
-                immaginePreferiti.setVisibility(View.VISIBLE);
+                imageView3.setVisibility(View.VISIBLE);
+                imageView5.setVisibility(View.VISIBLE);
 
 
                 String dominio = "https://api-free.deepl.com/v2/translate?";
                 String auth_key = "auth_key=" + authKey + "&";
-                String text = "text=" + (boxInserimento.getText().toString()).replace(" ","%20") + "&";
+                String text = "text=" + (editText1.getText().toString()).replace(" ","%20") + "&";
                 String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
 
                 String url = "";
@@ -430,9 +396,9 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
 
-                                    boxTradotto.setText(t);
+                                    editText2.setText(t);
 
-                                    testo2 = boxTradotto.getText().toString();
+                                    testo2 = editText2.getText().toString();
 
                                 }
                                 catch(JSONException e)
@@ -445,7 +411,7 @@ public class MainActivity extends AppCompatActivity {
                         }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        boxTradotto.setText("That didn't work!");
+                        editText2.setText("That didn't work!");
                     }
                 });
 
@@ -459,8 +425,8 @@ public class MainActivity extends AppCompatActivity {
                 queue.add(stringRequest);
                 animationTradottoAvanti.start();
                 tvFunzioni2.setVisibility(View.VISIBLE);
-                immaginePreferiti.setVisibility(View.VISIBLE);
-                immagineCopia.setVisibility(View.VISIBLE);
+                imageView5.setVisibility(View.VISIBLE);
+                imageView2.setVisibility(View.VISIBLE);
                 buttonCopia2.setVisibility(View.VISIBLE);
                 buttonSalvataggio.setVisibility(View.VISIBLE);
 
@@ -519,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(!scambiato && !start) {
+                    if(scambiato == false && start == false) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -527,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
 
                 tvLingua1.setText(lingua1.getSelectedItem().toString());
                 //Se si cambia lingua quando il testo è già scritto si controlla che la lingua sia riproducibile o meno dal sintetizzatore
-                if(inseritoQualcosa){
+                if(inseritoQualcosa == true){
                     if (lingueVocali.get(lingua1.getSelectedItem().toString()) != null) {
                         suono1.setVisibility(View.VISIBLE);
                         button3.setClickable(true);
@@ -564,7 +530,7 @@ public class MainActivity extends AppCompatActivity {
                                        int position, long id) {
                 Object item = adapterView.getItemAtPosition(position);
                 if (item != null) {
-                    if(!scambiato && !start) {
+                    if(scambiato == false && start == false) {
                         Toast.makeText(MainActivity.this, item.toString(),
                                 Toast.LENGTH_SHORT).show();
                         scambiato = false;
@@ -583,10 +549,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        boxInserimento.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editText1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(!avanti) {
+                if(avanti == false) {
                     animationAvanti.start();
                     spostaTesto();
                     avanti = true;
@@ -610,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        boxInserimento.addTextChangedListener(new TextWatcher() {
+        editText1.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -626,7 +592,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
 
-                if (s.length() != 0 && !((boxInserimento.getText().toString()).trim().isEmpty() && (boxInserimento.getText().toString()).matches("[\\n\\r]+"))){
+                if (s.length() != 0 && !((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))){
                     //Si mostra il bottone per replicare vocalmente solo se la lingua è presente tra quelle sintetizzabili
                     if(lingueVocali.get(lingua1.getSelectedItem()) != null) {
                         suono1.setVisibility(View.VISIBLE);
@@ -640,8 +606,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                     inseritoQualcosa = true;
-                    testo1 = boxInserimento.getText().toString();
-                }else if(s.length() == 0 || ((boxInserimento.getText().toString()).trim().isEmpty() && (boxInserimento.getText().toString()).matches("[\\n\\r]+"))) {
+                    testo1 = editText1.getText().toString();
+                }else if(s.length() == 0 || ((editText1.getText().toString()).trim().isEmpty() && (editText1.getText().toString()).matches("[\\n\\r]+"))) {
                     suono1.setVisibility(View.GONE);
                     button3.setClickable(false);
                     inseritoQualcosa = false;
@@ -708,28 +674,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void removeFocus(){
-        boxInserimento.clearFocus();
+        editText1.clearFocus();
         float scale = getResources().getDisplayMetrics().density;
         int pLeft = (int) (130*scale + 0.5f);
         int pTop = (int) (10*scale + 0.5f);
-        boxInserimento.setPadding(pLeft,pTop,0,0);
-        boxInserimento.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+        editText1.setPadding(pLeft,pTop,0,0);
+        editText1.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
 
 
     }
 
     public void spostaTesto(){
 
-        boxInserimento.setPadding(125,10,125,0);
-        boxInserimento.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        editText1.setPadding(125,10,125,0);
+        editText1.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
-    public void onBackPressed(){
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+
+
+
 }
 
