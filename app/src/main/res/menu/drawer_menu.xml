@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/cronologia"
+            android:icon="@drawable/time_simbolo"
+            android:title="Cronologia" />
+        <item
+            android:id="@+id/salvati"
+            android:icon="@drawable/immagine_stella"
+            android:title="Salvati" />
+        <item
+            android:id="@+id/impostazioni"
+            android:icon="@drawable/settings_simbolo"
+            android:title="Impostazioni" />
+    </group>
+
+</menu>

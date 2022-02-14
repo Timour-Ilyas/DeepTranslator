@@ -1,6 +1,11 @@
 package com.example.deeptranslator;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,6 +13,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +23,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     boolean scambiato = true;
 
     private TextToSpeech mTTS;
-    private EditText mEditText;
-    private SeekBar mSeekBarPitch;
-    private SeekBar mSeekBarSpeed;
-    private Button mButtonSpeak;
 
     private String testo1;
     private String testo2;
@@ -58,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean inseritoQualcosa = false;
 
+    private Toolbar toolbar;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle toggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +72,45 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        toolbar = findViewById(R.id.toolbar);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+
+        drawer.closeDrawer(navigationView);
+
+
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.cronologia:
+                        Toast.makeText(MainActivity.this, "Cronologia selezionato",Toast.LENGTH_SHORT).show();
+                        drawer.closeDrawers();
+                        break;
+                    case R.id.salvati:
+                        Toast.makeText(MainActivity.this, "Salvati selezionato",Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.impostazioni:
+                        Toast.makeText(MainActivity.this, "Impostazioni selezionato",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                drawer.closeDrawer(GravityCompat.START);
+
+                return true;
+            }
+        });
+
         RequestQueue queue = Volley.newRequestQueue(this);
 
         lingue = new HashMap<String,String>();
-
 
         lingue.put("Rileva Lingua","");
         lingue.put("Bulgarian","BG");
@@ -682,8 +724,12 @@ public class MainActivity extends AppCompatActivity {
         boxInserimento.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 
-
-
-
+    public void onBackPressed(){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
