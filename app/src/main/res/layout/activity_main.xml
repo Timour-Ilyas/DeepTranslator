@@ -16,7 +16,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
+        app:layout_constraintGuide_percent="0.10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline56"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.00" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline57"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline21"
@@ -79,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.63" />
+        app:layout_constraintGuide_percent="0.62" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
@@ -101,13 +115,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.54" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline47"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.52" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline49"
@@ -216,6 +223,7 @@
         android:background="@drawable/stile_cardview"
         android:backgroundTint="@null"
         android:elevation="4dp"
+        android:fontFamily="@font/alata"
         android:gravity="top"
         android:hint="Inserisci il testo qui"
         android:inputType="textMultiLine"
@@ -244,11 +252,12 @@
         android:background="@drawable/tradotto_forma"
         android:backgroundTint="@null"
 
+        android:fontFamily="@font/alata"
         android:gravity="top"
         android:inputType="textMultiLine"
         android:lines="4"
         android:overScrollMode="always"
-        android:paddingLeft="3dp"
+        android:paddingLeft="9dp"
         android:paddingTop="10dp"
         android:paddingEnd="40dp"
         android:scrollbarStyle="insideInset"
@@ -282,7 +291,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.16" />
+        app:layout_constraintGuide_percent="0.23" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline58"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline17"
@@ -321,6 +337,13 @@
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline43"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline73"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -387,7 +410,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.04" />
+        app:layout_constraintGuide_percent="0.02" />
 
     <Spinner
         android:id="@+id/spinner1"
@@ -439,7 +462,18 @@
         app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
     <Button
-        android:id="@+id/pulsanteVisualizzaPrimaLingua"
+        android:id="@+id/pulsanteImpostazioni"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:cornerRadius="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57"
+        app:layout_constraintEnd_toStartOf="@+id/guideline58"
+        app:layout_constraintStart_toStartOf="@+id/guideline41"
+        app:layout_constraintTop_toTopOf="@+id/guideline56" />
+
+    <Button
+        android:id="@+id/pulsanteSuonoPrimaLingua"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="?android:attr/selectableItemBackground"
@@ -453,7 +487,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/pulsanteVisualizzaSecondaLingua"
+        android:id="@+id/pulsanteSuonoSecondaLingua"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="?android:attr/selectableItemBackground"
@@ -471,6 +505,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:fontFamily="@font/alata"
         android:paddingTop="5dp"
         android:textColor="#8332ac"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
@@ -483,8 +518,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
+        android:fontFamily="@font/alata"
         android:paddingTop="5dp"
-        android:text="Spagnolo"
         android:textColor="#8332ac"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
@@ -526,12 +561,20 @@
         android:layout_height="0dp"
         android:background="@drawable/bottone_stile"
         android:backgroundTint="@null"
-        android:text="Traduci"
+        android:fontFamily="@font/alata"
+        android:textSize="18dp"
         app:cornerRadius="100dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline72"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline24" />
+        app:layout_constraintStart_toStartOf="@+id/guideline70"
+        app:layout_constraintTop_toTopOf="@+id/guideline37" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline72"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="1.20" />
 
     <Button
         android:id="@+id/buttonMicrofono"
@@ -539,6 +582,7 @@
         android:layout_height="0dp"
         android:background="@drawable/bottone_stile"
         android:backgroundTint="@color/white"
+        android:visibility="invisible"
         app:cornerRadius="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
@@ -554,6 +598,7 @@
         android:maxWidth="30dp"
         android:maxHeight="30dp"
         android:scaleType="fitCenter"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline26"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintStart_toStartOf="@+id/guideline27"
@@ -575,12 +620,12 @@
         app:layout_constraintTop_toTopOf="@+id/immaginePulsanteCopia" />
 
     <Button
-        android:id="@+id/pulsanteDiSalvataggio"
+        android:id="@+id/pulsanteSalvataggio"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="false"
-        android:elevation="5dp"
+        android:visibility="invisible"
         app:cornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline39"
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
@@ -647,18 +692,6 @@
         app:layout_constraintTop_toTopOf="@+id/guideline35"
         app:srcCompat="@drawable/ic_baseline_content_copy_24" />
 
-    <ImageButton
-        android:id="@+id/pulsanteMenu"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#00FFFFFF"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toStartOf="@+id/guideline16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/settings_simbolo" />
-
     <TextView
         android:id="@+id/TVfunzioni1"
         android:layout_width="0dp"
@@ -683,5 +716,55 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline9"
         app:layout_constraintStart_toStartOf="@+id/guideline34"
         app:layout_constraintTop_toTopOf="@+id/guideline36" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/intestazione_translate"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/guideline16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/intestazione_per_logo"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline17"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/impostazioni"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline57"
+        app:layout_constraintEnd_toStartOf="@+id/guideline58"
+        app:layout_constraintStart_toStartOf="@+id/guideline41"
+        app:layout_constraintTop_toTopOf="@+id/guideline56"
+        app:srcCompat="@drawable/settings_simbolo" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline70"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:elevation="8dp"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Microfono"
+        app:layout_constraintStart_toStartOf="@+id/guideline43"
+        app:layout_constraintTop_toTopOf="@+id/guideline24"
+        app:srcCompat="@drawable/ic_baseline_translate_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

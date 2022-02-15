@@ -4,6 +4,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String,String> lingueVocali;
 
     private boolean inseritoQualcosa = false;
+    public static String[] lingua1Array;
+    public static String[] lingua2Array;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,12 +117,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Si definiscono le lingue sia per il primo che per il secondo spinner
-        String[] lingua1Array = new String[] {
+        lingua1Array = new String[] {
                 "Rileva Lingua", "Bulgarian", "Czech", "Danish", "German", "Greek", "English", "Spanish", "Estonian",
                 "Finnish", "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)",
                 "Portuguese (European)", "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
         };
-        String[] lingua2Array = new String[] {
+        lingua2Array = new String[] {
                 "Bulgarian", "Czech", "Danish", "German", "Greek", "English", "Spanish", "Estonian", "Finnish",
                 "French", "Hungarian", "Italian", "Japanese", "Lithuanian", "Latvian", "Dutch", "Polish", "Portuguese (Brazilian)", "Portuguese (European)",
                 "Romanian", "Russian", "Slovak", "Slovenian", "Swedish", "Chinese"
@@ -130,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 "IT", "EN", "FR", "ES", "RU", "ZH", "JA", "DE", "PT"
         };
 
-        Spinner lingua1 =  findViewById(R.id.spinner1);
-        Spinner lingua2 =  findViewById(R.id.spinner2);
+
 
         TextView tvLingua1 =  findViewById(R.id.tvLingua1);
         TextView tvLingua2 =  findViewById(R.id.tvLingua2);
@@ -169,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView immaginePreferiti = findViewById(R.id.immaginePulsantePreferiti);
         TextView tvFunzioni2 = findViewById(R.id.TVfunzioni2);
 
+        Spinner lingua1 =  findViewById(R.id.spinner1);
+        Spinner lingua2 =  findViewById(R.id.spinner2);
 
         //Si definisce lo stile di apertura degli spinner e gli si assegna un array di valori
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
@@ -191,10 +195,24 @@ public class MainActivity extends AppCompatActivity {
         Button button1 = findViewById(R.id.pulsanteScambiaLingue);
         Button buttonCopia = findViewById(R.id.pulsanteDiCopia2);
         Button buttonCopia2 = findViewById(R.id.pulsanteDiCopia);
-        Button button3 = findViewById(R.id.pulsanteVisualizzaPrimaLingua);
-        Button button4 = findViewById(R.id.pulsanteVisualizzaSecondaLingua);
+        Button button3 = findViewById(R.id.pulsanteSuonoPrimaLingua);
+        Button button4 = findViewById(R.id.pulsanteSuonoSecondaLingua);
+        Button buttonSalvataggio = findViewById(R.id.pulsanteSalvataggio);
 
-        Button buttonSalvataggio = findViewById(R.id.pulsanteDiSalvataggio);
+
+
+        //Relazione
+        Button buttonImpostazioni = findViewById(R.id.pulsanteImpostazioni);
+        buttonImpostazioni.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),Impostazioni.class);
+                startActivity(i);
+                finish();
+            }
+          });
+
+
 
         Button buttonTraduci = findViewById(R.id.buttonTraduci);
         tvLingua1.setText(lingua1.getSelectedItem().toString());
@@ -250,27 +268,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
+                if(inseritoQualcosa) {
+                    if (lingua1.getSelectedItemPosition() != 0) {
+                        int pos;
+                        String appoggio = boxInserimento.getText().toString();
+                        String appoggioTesto = testo1;
 
-                if(lingua1.getSelectedItemPosition() != 0) {
-                    int pos;
-                    String appoggio = boxInserimento.getText().toString();
-                    String appoggioTesto = testo1;
+                        pos = lingua1.getSelectedItemPosition();
+                        scambiato = true;
 
-                    pos = lingua1.getSelectedItemPosition();
-                    scambiato = true;
+                        lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
+                        boxInserimento.setText(boxTradotto.getText().toString());
+                        testo1 = testo2;
 
-                    lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
-                    boxInserimento.setText(boxTradotto.getText().toString());
-                    testo1 = testo2;
-
-                    lingua2.setSelection(pos - 1);
-                    boxTradotto.setText(appoggio);
-                    testo2 = appoggioTesto;
-                }else{
-                    Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
-                            Toast.LENGTH_LONG).show();
-                }
-
+                        lingua2.setSelection(pos - 1);
+                        boxTradotto.setText(appoggio);
+                        testo2 = appoggioTesto;
+                    } else {
+                        Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }Toast.makeText(MainActivity.this, "Inserisci il testo da tradurre",
+                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -318,103 +337,106 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
-                buttonCopia2.setClickable(true);
-                buttonCopia2.setVisibility(View.VISIBLE);
-
-                copiaClipBoardImmagine.setVisibility(View.VISIBLE);
-
-                tvLingua2.setVisibility(View.VISIBLE);
+                if(inseritoQualcosa) {
 
 
-                if(lingueVocali.get(lingua2.getSelectedItem().toString()) != null) {
-                    suono2.setVisibility(View.VISIBLE);
-                    button4.setClickable(true);
+                    copiaClipBoardImmagine.setVisibility(View.VISIBLE);
 
-                }else {
-                    suono2.setVisibility(View.INVISIBLE);
-                    button4.setClickable(false);
-                }
-
-                boxTradotto.setVisibility(View.VISIBLE);
-                boxTradotto.setClickable(false);
-
-                copiaClipBoardImmagine.setVisibility(View.VISIBLE);
-                immaginePreferiti.setVisibility(View.VISIBLE);
+                    tvLingua2.setVisibility(View.VISIBLE);
 
 
-                String dominio = "https://api-free.deepl.com/v2/translate?";
-                String auth_key = "auth_key=" + authKey + "&";
-                String text = "text=" + (boxInserimento.getText().toString()).replace(" ","%20") + "&";
-                String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
+                    if (lingueVocali.get(lingua2.getSelectedItem().toString()) != null) {
+                        suono2.setVisibility(View.VISIBLE);
+                        button4.setClickable(true);
 
-                String url = "";
+                    } else {
+                        suono2.setVisibility(View.INVISIBLE);
+                        button4.setClickable(false);
+                    }
 
-                System.out.println("Leroleroleroleroelro: " + lingue.get(lingua1.getSelectedItem()));
+                    boxTradotto.setVisibility(View.VISIBLE);
+                    boxTradotto.setClickable(false);
 
-                if(lingua1.getSelectedItemPosition() != 0) {
-                    String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem()) + "&";
-                    url = dominio + auth_key + text + source_lang + target_lang;
-                }else{
-                    url = dominio + auth_key + text + target_lang;
-                }
-
+                    copiaClipBoardImmagine.setVisibility(View.VISIBLE);
+                    immaginePreferiti.setVisibility(View.VISIBLE);
 
 
+                    String dominio = "https://api-free.deepl.com/v2/translate?";
+                    String auth_key = "auth_key=" + authKey + "&";
+                    String text = "text=" + (boxInserimento.getText().toString()).replace(" ", "%20") + "&";
+                    String target_lang = "target_lang=" + lingue.get(lingua2.getSelectedItem());
 
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
+                    String url = "";
 
-                                Log.d("API",response);
+                    System.out.println("Leroleroleroleroelro: " + lingue.get(lingua1.getSelectedItem()));
 
-                                try
-                                {
-                                    JSONObject j = new JSONObject(response);
-                                    JSONArray a = j.getJSONArray("translations");
-                                    JSONObject testoJSON = a.getJSONObject(0);
+                    if (lingua1.getSelectedItemPosition() != 0) {
+                        String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem()) + "&";
+                        url = dominio + auth_key + text + source_lang + target_lang;
+                    } else {
+                        url = dominio + auth_key + text + target_lang;
+                    }
 
-                                    String t = null;
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+
+                                    Log.d("API", response);
+
                                     try {
-                                        t = new String((testoJSON.getString("text")).getBytes("ISO-8859-1"), "UTF-8");
-                                    } catch (UnsupportedEncodingException unsupportedEncodingException) {
-                                        unsupportedEncodingException.printStackTrace();
+                                        JSONObject j = new JSONObject(response);
+                                        JSONArray a = j.getJSONArray("translations");
+                                        JSONObject testoJSON = a.getJSONObject(0);
+
+                                        String t = null;
+                                        try {
+                                            t = new String((testoJSON.getString("text")).getBytes("ISO-8859-1"), "UTF-8");
+                                        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+                                            unsupportedEncodingException.printStackTrace();
+                                        }
+
+
+                                        boxTradotto.setText(t);
+
+                                        testo2 = boxTradotto.getText().toString();
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
                                     }
 
 
-                                    boxTradotto.setText(t);
-
-                                    testo2 = boxTradotto.getText().toString();
-
                                 }
-                                catch(JSONException e)
-                                {
-                                    e.printStackTrace();
-                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            boxTradotto.setText("That didn't work!");
+                        }
+                    });
+
+                    /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
+
+                    tvLingua2.setText(lingua2.getSelectedItem().toString());
+                    //editText2.setText("Hey how's it going, is everything good?");
 
 
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        boxTradotto.setText("That didn't work!");
-                    }
-                });
+                    // Add the request to the RequestQueue.
+                    queue.add(stringRequest);
+                    animationTradottoAvanti.start();
+                    tvFunzioni2.setVisibility(View.VISIBLE);
+                    immaginePreferiti.setVisibility(View.VISIBLE);
+                    immagineCopia.setVisibility(View.VISIBLE);
 
-                /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
+                    buttonCopia2.setClickable(true);
+                    buttonCopia2.setVisibility(View.VISIBLE);
 
-                tvLingua2.setText(lingua2.getSelectedItem().toString());
-                //editText2.setText("Hey how's it going, is everything good?");
-
-
-                // Add the request to the RequestQueue.
-                queue.add(stringRequest);
-                animationTradottoAvanti.start();
-                tvFunzioni2.setVisibility(View.VISIBLE);
-                immaginePreferiti.setVisibility(View.VISIBLE);
-                immagineCopia.setVisibility(View.VISIBLE);
-                buttonCopia2.setVisibility(View.VISIBLE);
-                buttonSalvataggio.setVisibility(View.VISIBLE);
+                    buttonSalvataggio.setClickable(true);
+                    buttonSalvataggio.setVisibility(View.VISIBLE);
+                }else{
+                    Toast.makeText(MainActivity.this, "Inserisci il testo da tradurre",
+                            Toast.LENGTH_SHORT).show();
+                }
 
 
 
@@ -483,18 +505,18 @@ public class MainActivity extends AppCompatActivity {
                     if (lingueVocali.get(lingua1.getSelectedItem().toString()) != null) {
                         suono1.setVisibility(View.VISIBLE);
                         button3.setClickable(true);
-                        Log.e("CIAO_1: ", "Sono passato dall'if, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+
 
                     } else {
                         suono1.setVisibility(View.INVISIBLE);
                         button3.setClickable(false);
-                        Log.e("CIAO_2: ", "Sono passato dall'else, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+
                     }
 
                 }else{
                     suono1.setVisibility(View.GONE);
                     button3.setClickable(false);
-                    Log.e("hellooooooO: ", "Sono passato dall'elseMAGGIORE, " + lingueVocali.get(lingua1.getSelectedItem().toString()));
+
                 }
 
 
@@ -521,6 +543,25 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         scambiato = false;
                     }
+                }
+
+                tvLingua2.setText(lingua2.getSelectedItem().toString());
+                if(inseritoQualcosa){
+                    if (lingueVocali.get(lingua2.getSelectedItem().toString()) != null) {
+                        suono2.setVisibility(View.VISIBLE);
+                        button4.setClickable(true);
+
+
+                    } else {
+                        suono2.setVisibility(View.INVISIBLE);
+                        button4.setClickable(false);
+
+                    }
+
+                }else{
+                    suono2.setVisibility(View.GONE);
+                    button4.setClickable(false);
+
                 }
 
 
