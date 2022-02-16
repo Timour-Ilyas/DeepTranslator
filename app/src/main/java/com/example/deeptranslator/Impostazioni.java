@@ -2,6 +2,7 @@ package com.example.deeptranslator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -32,6 +33,15 @@ public class Impostazioni extends AppCompatActivity {
         lingua1 =  findViewById(R.id.LinguaPrefOrig);
         lingua2 =  findViewById(R.id.LinguaPrefDest);
         authKey =  findViewById(R.id.TestoAuthKey);
+
+        Button buttonCronologia = findViewById(R.id.buttonCronologia);
+        buttonCronologia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(),Cronologia.class);
+                startActivity(i);
+            }
+        });
 
         buttonSalva = findViewById(R.id.buttonSalva);
         Button buttonIndietro = findViewById(R.id.pulsanteIndietro);

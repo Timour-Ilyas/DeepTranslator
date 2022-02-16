@@ -3,7 +3,7 @@
     package="com.example.deeptranslator">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +12,9 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DeepTranslator">
+        <activity
+            android:name=".Cronologia"
+            android:exported="true" />
         <activity
             android:name=".Impostazioni"
             android:exported="true" />

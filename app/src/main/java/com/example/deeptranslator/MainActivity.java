@@ -6,6 +6,8 @@ import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -13,6 +15,7 @@ import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -62,12 +65,17 @@ public class MainActivity extends AppCompatActivity {
     public static String[] lingua1Array;
     public static String[] lingua2Array;
 
+    TextView tvLingua1;
+    TextView tvLingua2;
+
+    static SharedPreferences spTraduzioni;
+
     private static final int REQUEST_CODE_SPEECH_INPUT = 1;
 
     static Spinner lingua1;
     static Spinner lingua2;
-    private boolean successo = false;
-    private boolean isRecording = false;
+    private boolean salvato = false;
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
@@ -86,6 +94,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    public void aggiungiTraduzione(){
+        String lang1 = lingua1.getSelectedItem().toString();
+        String lang2 = lingua2.getSelectedItem().toString();
+        String txt1 = boxInserimento.getText().toString();
+        String txt2 = boxTradotto.getText().toString();
+
+        SharedPreferences.Editor editor = getSharedPreferences("traduzioni",MODE_PRIVATE).edit();
+        Integer nTrad = spTraduzioni.getAll().size();
+        System.out.println("Ciaoooo: " + nTrad);
+        editor.putString(nTrad.toString(),(lang1+"§"+lang2+"§"+txt1+"§"+txt2));
+        editor.commit();
+
+        nTrad = spTraduzioni.getAll().size();
+        System.out.println("Ciaoooo2: " + nTrad);
+
+    }
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +124,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RequestQueue queue = Volley.newRequestQueue(this);
+
+        spTraduzioni = getSharedPreferences("traduzioni",MODE_PRIVATE);
+
+
+
+
+
+
 
         lingue = new HashMap<String,String>();
 
@@ -163,8 +201,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        TextView tvLingua1 =  findViewById(R.id.tvLingua1);
-        TextView tvLingua2 =  findViewById(R.id.tvLingua2);
+        tvLingua1 =  findViewById(R.id.tvLingua1);
+        tvLingua2 =  findViewById(R.id.tvLingua2);
 
         boxInserimento =  findViewById(R.id.etInserimentoMessaggio);
         boxTradotto =  findViewById(R.id.etMessaggioTradotto);
@@ -196,7 +234,6 @@ public class MainActivity extends AppCompatActivity {
         ImageView suono2 =  findViewById(R.id.Suono2);
         ImageView copiaClipBoardImmagine = findViewById(R.id.immagineCopiaMessaggioInserito);
         ImageView immagineCopia = findViewById(R.id.immaginePulsanteCopia);
-        ImageView immaginePreferiti = findViewById(R.id.immaginePulsantePreferiti);
         TextView tvFunzioni2 = findViewById(R.id.TVfunzioni2);
 
         lingua1 =  findViewById(R.id.spinner1);
@@ -231,8 +268,10 @@ public class MainActivity extends AppCompatActivity {
         Button buttonCopia2 = findViewById(R.id.pulsanteDiCopia);
         Button button3 = findViewById(R.id.pulsanteSuonoPrimaLingua);
         Button button4 = findViewById(R.id.pulsanteSuonoSecondaLingua);
-        Button buttonSalvataggio = findViewById(R.id.pulsanteSalvataggio);
+
         Button buttonRecord = findViewById(R.id.buttonMicrofono);
+
+
 
 
 
@@ -403,19 +442,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
-                successo = false;
+
                 if(inseritoQualcosa) {
 
                     animationTradottoAvanti.start();
                     tvFunzioni2.setVisibility(View.VISIBLE);
-                    immaginePreferiti.setVisibility(View.VISIBLE);
+
                     immagineCopia.setVisibility(View.VISIBLE);
 
                     buttonCopia2.setClickable(true);
                     buttonCopia2.setVisibility(View.VISIBLE);
 
-                    buttonSalvataggio.setClickable(true);
-                    buttonSalvataggio.setVisibility(View.VISIBLE);
+
                     tvLingua2.setText(lingua2.getSelectedItem().toString());
                     copiaClipBoardImmagine.setVisibility(View.VISIBLE);
 
@@ -435,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                     boxTradotto.setClickable(false);
 
                     copiaClipBoardImmagine.setVisibility(View.VISIBLE);
-                    immaginePreferiti.setVisibility(View.VISIBLE);
+
 
 
                     String dominio = "https://api-free.deepl.com/v2/translate?";
@@ -478,7 +516,8 @@ public class MainActivity extends AppCompatActivity {
                                         boxTradotto.setText(t);
 
                                         testo2 = boxTradotto.getText().toString();
-                                        successo = true;
+
+                                        aggiungiTraduzione();
 
 
                                     } catch (JSONException e) {

@@ -114,14 +114,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.71" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline38"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.73" />
+        app:layout_constraintGuide_percent="0.75" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
@@ -173,18 +166,11 @@
         app:layout_constraintGuide_percent="0.81" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline39"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.79" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline35"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.65" />
+        app:layout_constraintGuide_percent="0.68" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline37"
@@ -300,7 +286,7 @@
         android:scrollHorizontally="false"
         android:textAlignment="textStart"
         android:textAllCaps="false"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toStartOf="parent"
@@ -329,6 +315,13 @@
         app:layout_constraintGuide_percent="0.23" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline101"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline58"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -347,7 +340,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="-0.13" />
+        app:layout_constraintGuide_percent="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline96"
@@ -361,7 +354,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.38" />
+        app:layout_constraintGuide_percent="0.36" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
@@ -563,9 +556,9 @@
         android:layout_marginStart="16dp"
         android:fontFamily="@font/alata"
         android:paddingTop="5dp"
-        android:textColor="#8332ac"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
-        app:layout_constraintEnd_toStartOf="@+id/guideline17"
+        app:layout_constraintEnd_toStartOf="@+id/guideline101"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline19" />
 
@@ -576,10 +569,10 @@
         android:layout_marginStart="16dp"
         android:fontFamily="@font/alata"
         android:paddingTop="5dp"
-        android:textColor="#8332ac"
+        android:textColor="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
-        app:layout_constraintEnd_toStartOf="@+id/guideline17"
+        app:layout_constraintEnd_toStartOf="@+id/guideline101"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline22" />
 
@@ -590,10 +583,11 @@
         android:maxWidth="30dp"
         android:maxHeight="30dp"
         android:scaleType="fitCenter"
+        android:tint="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toStartOf="@+id/guideline18"
-        app:layout_constraintStart_toStartOf="@+id/guideline17"
+        app:layout_constraintStart_toStartOf="@+id/guideline101"
         app:layout_constraintTop_toTopOf="@+id/guideline19"
         app:srcCompat="@drawable/sound" />
 
@@ -604,10 +598,11 @@
         android:maxWidth="30dp"
         android:maxHeight="30dp"
         android:scaleType="fitCenter"
+        android:tint="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline25"
         app:layout_constraintEnd_toStartOf="@+id/guideline18"
-        app:layout_constraintStart_toStartOf="@+id/guideline17"
+        app:layout_constraintStart_toStartOf="@+id/guideline101"
         app:layout_constraintTop_toTopOf="@+id/guideline22"
         app:srcCompat="@drawable/sound" />
 
@@ -689,19 +684,6 @@
         app:layout_constraintTop_toTopOf="@+id/immaginePulsanteCopia" />
 
     <Button
-        android:id="@+id/pulsanteSalvataggio"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="false"
-        android:visibility="invisible"
-        app:cornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline39"
-        app:layout_constraintEnd_toStartOf="@+id/guideline9"
-        app:layout_constraintStart_toStartOf="@+id/guideline34"
-        app:layout_constraintTop_toTopOf="@+id/guideline38" />
-
-    <Button
         android:id="@+id/pulsanteDiCopia2"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -728,22 +710,6 @@
         app:layout_constraintStart_toStartOf="@+id/guideline28"
         app:layout_constraintTop_toTopOf="@+id/guideline29"
         app:srcCompat="@drawable/ic_baseline_content_copy_24" />
-
-    <ImageView
-        android:id="@+id/immaginePulsantePreferiti"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:elevation="2dp"
-        android:maxWidth="30dp"
-        android:maxHeight="30dp"
-        android:scaleType="fitCenter"
-        android:tint="@color/white"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline39"
-        app:layout_constraintEnd_toStartOf="@+id/guideline30"
-        app:layout_constraintStart_toStartOf="@+id/guideline28"
-        app:layout_constraintTop_toTopOf="@+id/guideline38"
-        app:srcCompat="@drawable/ic_baseline_star_border_24" />
 
     <ImageView
         android:id="@+id/immaginePulsanteCopia"
