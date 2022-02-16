@@ -7,15 +7,14 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
 
-            <gradient android:angle="0" android:startColor="#1919ff" android:endColor="#1919ff" />
+            <gradient android:angle="0" android:startColor="#3568DF" android:endColor="#3568DF" />
 
 
             <corners
-                android:bottomLeftRadius="0dp"
-                android:bottomRightRadius="0dp"
-                android:topRightRadius="400dp"
-                android:topLeftRadius="0dp"
-                />
+                android:bottomRightRadius="18dp"
+                android:bottomLeftRadius="18dp"
+                android:topLeftRadius="18dp"
+                android:topRightRadius="18dp"/>
         </shape>
     </item>
 </ripple>
