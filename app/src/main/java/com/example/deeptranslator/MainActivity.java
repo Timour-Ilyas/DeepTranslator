@@ -1,4 +1,5 @@
 package com.example.deeptranslator;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import android.animation.ObjectAnimator;
@@ -6,6 +7,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,8 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,10 +62,28 @@ public class MainActivity extends AppCompatActivity {
     public static String[] lingua1Array;
     public static String[] lingua2Array;
 
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1;
+
     static Spinner lingua1;
     static Spinner lingua2;
     private boolean successo = false;
+    private boolean isRecording = false;
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    @Nullable Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(
+                        RecognizerIntent.EXTRA_RESULTS);
+
+                boxInserimento.setText(Objects.requireNonNull(result).get(0));
+
+            }
+        }
+    }
 
 
     @Override
@@ -208,6 +232,38 @@ public class MainActivity extends AppCompatActivity {
         Button button3 = findViewById(R.id.pulsanteSuonoPrimaLingua);
         Button button4 = findViewById(R.id.pulsanteSuonoSecondaLingua);
         Button buttonSalvataggio = findViewById(R.id.pulsanteSalvataggio);
+        Button buttonRecord = findViewById(R.id.buttonMicrofono);
+
+
+
+/*
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                "com.domain.app");*/
+        buttonRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent
+                        = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,
+                        Locale.getDefault());
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text");
+
+                try {
+                    startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+                }
+                catch (Exception e) {
+                    Toast
+                            .makeText(MainActivity.this, " " + e.getMessage(),
+                                    Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
 
 
 
