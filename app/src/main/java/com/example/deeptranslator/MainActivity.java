@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean start = true;
     private boolean avanti = false;
 
-    private String authKey = "77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx";
+    static String authKey = null;
     private EditText boxInserimento;
     private EditText boxTradotto;
     private HashMap<String,String> lingue;
@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean inseritoQualcosa = false;
     public static String[] lingua1Array;
     public static String[] lingua2Array;
+
+    static Spinner lingua1;
+    static Spinner lingua2;
+    private boolean successo = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
         lingueVocali.put("French","FR");
         lingueVocali.put("Japanese","JP");
         lingueVocali.put("German","DE");
-
-
 
 
 
@@ -171,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView immaginePreferiti = findViewById(R.id.immaginePulsantePreferiti);
         TextView tvFunzioni2 = findViewById(R.id.TVfunzioni2);
 
-        Spinner lingua1 =  findViewById(R.id.spinner1);
-        Spinner lingua2 =  findViewById(R.id.spinner2);
+        lingua1 =  findViewById(R.id.spinner1);
+        lingua2 =  findViewById(R.id.spinner2);
 
         //Si definisce lo stile di apertura degli spinner e gli si assegna un array di valori
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
@@ -186,8 +190,14 @@ public class MainActivity extends AppCompatActivity {
         lingua1.setAdapter(adapter1);
         lingua2.setAdapter(adapter2);
 
-        lingua1.setSelection(0);
-        lingua2.setSelection(1);
+        Impostazioni.sp = getSharedPreferences("impostazioni",MODE_PRIVATE);
+        int sl = Impostazioni.sp.getInt("source_lang",0);
+        int tl = Impostazioni.sp.getInt("target_lang",1);
+        authKey = Impostazioni.sp.getString("key","77cbbe56-2d6a-5990-0a0d-795fac3884c5:fx");
+
+        lingua1.setSelection(sl);
+        lingua2.setSelection(tl);
+
 
         start = false;
         scambiato = false;
@@ -208,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(),Impostazioni.class);
                 startActivity(i);
-                finish();
+
             }
           });
 
@@ -337,9 +347,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
+                successo = false;
                 if(inseritoQualcosa) {
 
+                    animationTradottoAvanti.start();
+                    tvFunzioni2.setVisibility(View.VISIBLE);
+                    immaginePreferiti.setVisibility(View.VISIBLE);
+                    immagineCopia.setVisibility(View.VISIBLE);
 
+                    buttonCopia2.setClickable(true);
+                    buttonCopia2.setVisibility(View.VISIBLE);
+
+                    buttonSalvataggio.setClickable(true);
+                    buttonSalvataggio.setVisibility(View.VISIBLE);
+                    tvLingua2.setText(lingua2.getSelectedItem().toString());
                     copiaClipBoardImmagine.setVisibility(View.VISIBLE);
 
                     tvLingua2.setVisibility(View.VISIBLE);
@@ -401,6 +422,8 @@ public class MainActivity extends AppCompatActivity {
                                         boxTradotto.setText(t);
 
                                         testo2 = boxTradotto.getText().toString();
+                                        successo = true;
+
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -411,28 +434,22 @@ public class MainActivity extends AppCompatActivity {
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            boxTradotto.setText("That didn't work!");
+                            Toast.makeText(MainActivity.this, "Impossibile connettersi, verificare di essere connessi ad Internet",
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
 
                     /**TRADUZIONE DEL TESTO E STAMPA SUL SECONDO EDIT TEXT**/
 
-                    tvLingua2.setText(lingua2.getSelectedItem().toString());
-                    //editText2.setText("Hey how's it going, is everything good?");
 
 
-                    // Add the request to the RequestQueue.
                     queue.add(stringRequest);
-                    animationTradottoAvanti.start();
-                    tvFunzioni2.setVisibility(View.VISIBLE);
-                    immaginePreferiti.setVisibility(View.VISIBLE);
-                    immagineCopia.setVisibility(View.VISIBLE);
 
-                    buttonCopia2.setClickable(true);
-                    buttonCopia2.setVisibility(View.VISIBLE);
 
-                    buttonSalvataggio.setClickable(true);
-                    buttonSalvataggio.setVisibility(View.VISIBLE);
+
+
+
+
                 }else{
                     Toast.makeText(MainActivity.this, "Inserisci il testo da tradurre",
                             Toast.LENGTH_SHORT).show();
