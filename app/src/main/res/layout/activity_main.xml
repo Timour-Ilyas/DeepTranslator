@@ -40,6 +40,13 @@
         app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline39"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="-0.08" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline99"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -801,5 +808,14 @@
         app:layout_constraintStart_toStartOf="@+id/guideline43"
         app:layout_constraintTop_toTopOf="@+id/guideline31"
         app:srcCompat="@drawable/ic_baseline_translate_24" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="181dp"
+        android:layout_height="149dp"
+        android:tint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline98"
+        app:layout_constraintStart_toStartOf="@+id/guideline23"
+        app:srcCompat="@mipmap/logo_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

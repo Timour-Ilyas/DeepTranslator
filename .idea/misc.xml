@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1775" />
+        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/bottone_salva.xml" value="0.1775" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/bottone_stile.xml" value="0.2085" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/edit_text_border.xml" value="0.1775" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/ic_baseline_content_copy_24.xml" value="0.1775" />
@@ -18,7 +19,10 @@
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/stile_cardview.xml" value="0.1775" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/time_simbolo.xml" value="0.2085" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/drawable/tradotto_forma.xml" value="0.2085" />
-        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/font/alata.xml" value="0.284375" />
+        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/activity_cronologia.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/activity_visualizzazione_iniziale.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/nav_header.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/spinner_item.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/XiroD/OneDrive/Documents/Coding/JavaAndroidStudio/DeepTranslator/app/src/main/res/layout/stile_spinner_dropdown.xml" value="0.25416666666666665" />
