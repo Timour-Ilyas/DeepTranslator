@@ -9,14 +9,14 @@
 
     <ImageView
         android:id="@+id/imageView8"
-        android:layout_width="430dp"
-        android:layout_height="421dp"
-        app:tint="@android:color/white"
+        android:layout_width="361dp"
+        android:layout_height="348dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/logo_foreground" />
+        app:srcCompat="@drawable/logo_playstore_senzasfondo"
+        app:tint="@android:color/white" />
 
     <TextView
         android:id="@+id/textView11"
