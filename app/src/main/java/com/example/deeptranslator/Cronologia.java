@@ -14,7 +14,7 @@ public class Cronologia extends AppCompatActivity {
     static LinearLayout layoutStringhe;
     int i = 0;
 
-
+    //Definisco cosa fare se si preme il pulsante per tornare indietro
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -27,6 +27,7 @@ public class Cronologia extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cronologia);
 
+        //Bottone per tornare all'activity precedente
         Button buttonIndietro = findViewById(R.id.bottoneIndietro2);
         buttonIndietro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +40,7 @@ public class Cronologia extends AppCompatActivity {
         LinearLayout sv = (LinearLayout) findViewById(R.id.contenitoreStringhe);
         sv.setBackgroundColor(Color.TRANSPARENT);
 
-
+        //bottone per eliminare la cronologia
         Button buttonXcronologia = findViewById(R.id.buttonEliminaCronologia);
         buttonXcronologia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +48,7 @@ public class Cronologia extends AppCompatActivity {
 
                 SharedPreferences spTraduzione = getSharedPreferences("traduzioni",MODE_PRIVATE);
                 spTraduzione.edit().clear().commit();
-                Integer nTrad = spTraduzione.getAll().size();
+
 
                 //Si aggiorna la pagina rimuovendo tutta la cronologia
                 layoutStringhe.removeAllViews();
@@ -61,8 +62,9 @@ public class Cronologia extends AppCompatActivity {
 
 
         Integer nTrad = MainActivity.spTraduzioni.getAll().size();
-        //Si crea la textView da visualizzare
         Log.e("NUMERO: ", nTrad.toString());
+
+        //Si crea la textView da visualizzare
         for(Integer i = 0; i < nTrad; i++) {
             if(i == 0){
                 sv.setBackgroundColor(Color.parseColor("#8332ac"));
@@ -76,7 +78,7 @@ public class Cronologia extends AppCompatActivity {
 
 
 
-
+            //si definisce lo stile della textview e si aggiunge al Linear Layout
             TextView tvAdd = new TextView(Cronologia.this);
             tvAdd.setBackgroundResource(R.drawable.textview_cliccabile);
             tvAdd.setText(lang1 + ": "+ txt1 + "\n\n" + lang2 + ": " + txt2);
@@ -90,23 +92,7 @@ public class Cronologia extends AppCompatActivity {
 
         }
 
-
-
-
     }
 
 
-    void aggiungiTVHistory(String lingua1, String lingua2, String testo1, String testo2){
-        //Si crea la textView da visualizzare
-        TextView tvAdd = new TextView(Cronologia.this);
-        tvAdd.setBackgroundResource(R.drawable.edit_text_border);
-        tvAdd.setText(lingua1 + ": "+ testo1 + "\n\n" + lingua2 + ": " + testo2);
-        tvAdd.setHeight(220);
-        tvAdd.setTextSize(15);
-        tvAdd.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        tvAdd.setGravity(Gravity.CENTER_VERTICAL);
-        tvAdd.setTextColor(Color.WHITE); // for example
-        layoutStringhe.addView(tvAdd);
-
-    }
 }

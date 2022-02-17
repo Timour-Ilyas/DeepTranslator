@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean salvato = false;
 
 
+    //metodo per gestire i risultati della registrazione vocale
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     @Nullable Intent data)
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+//metodo per aggiungere la traduzione fatta alla cronologia
     public void aggiungiTraduzione(){
         String lang1 = lingua1.getSelectedItem().toString();
         String lang2 = lingua2.getSelectedItem().toString();
@@ -100,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = getSharedPreferences("traduzioni",MODE_PRIVATE).edit();
         Integer nTrad = spTraduzioni.getAll().size();
-        System.out.println("Ciaoooo: " + nTrad);
+
         editor.putString(nTrad.toString(),(lang1+"§"+lang2+"§"+txt1+"§"+txt2));
         editor.commit();
 
         nTrad = spTraduzioni.getAll().size();
-        System.out.println("Ciaoooo2: " + nTrad);
+
 
     }
 
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+
+
         RequestQueue queue = Volley.newRequestQueue(this);
 
         spTraduzioni = getSharedPreferences("traduzioni",MODE_PRIVATE);
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //hashmap per contenere tutte le lingue con abbreviazione
         lingue = new HashMap<String,String>();
 
         lingue.put("Rileva Lingua","");
@@ -248,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
         lingua1.setAdapter(adapter1);
         lingua2.setAdapter(adapter2);
 
+        //Si impostano i valori salvati nelle impostazioni per gli spinner e la authkey
         Impostazioni.sp = getSharedPreferences("impostazioni",MODE_PRIVATE);
         int sl = Impostazioni.sp.getInt("source_lang",0);
         int tl = Impostazioni.sp.getInt("target_lang",1);
@@ -272,12 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-/*
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                "com.domain.app");*/
+        //Si Crea la finestra di dialogo google per la registrazione vocale quando il bottone è premuto
         buttonRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -303,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //Relazione
+        //Quando si preme il pulsante impostazioni si va nella corrispondente activity
         Button buttonImpostazioni = findViewById(R.id.pulsanteImpostazioni);
         buttonImpostazioni.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -320,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         tvLingua1.setText(lingua1.getSelectedItem().toString());
 
 
-        //si definisce il colore del testo dell'oggetto selezionato nello spinner per la scelta della lingua
+
         lingua1.setOnTouchListener(new View.OnTouchListener(){
 
             @Override
@@ -343,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-
+        //Metodi per copiare i testi da tradurre e tradotto
         buttonCopia.setOnClickListener(v -> {
             removeFocus();
             getApplicationContext();
@@ -365,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        //onClickListener per cosa fare quando si preme il pulsante scambia lingua
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -389,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        //Bottone per la riproduzione vocale del primo testo
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -399,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Bottone per la riproduzione vocale del secondo testo
         button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -410,24 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //Metodo per gestire cosa avviene quando si preme il pulsante per tradurre
         buttonTraduci.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -465,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
                     copiaClipBoardImmagine.setVisibility(View.VISIBLE);
 
 
-
+                    //si definiscono i dati per la richiesta
                     String dominio = "https://api-free.deepl.com/v2/translate?";
                     String auth_key = "auth_key=" + authKey + "&";
                     String text = "text=" + (boxInserimento.getText().toString()).replace(" ", "%20") + "&";
@@ -473,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
 
                     String url = "";
 
-                    System.out.println("Leroleroleroleroelro: " + lingue.get(lingua1.getSelectedItem()));
+
 
                     if (lingua1.getSelectedItemPosition() != 0) {
                         String source_lang = "source_lang=" + lingue.get(lingua1.getSelectedItem()) + "&";
@@ -482,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
                         url = dominio + auth_key + text + target_lang;
                     }
 
-
+                    //Si invia la richiesta http e si gestisce la risposta
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                             new Response.Listener<String>() {
                                 @Override
@@ -550,14 +533,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
+        //oggetto per la riproduzione vocale, si imposta la lingua iniziale
         mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -579,15 +555,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
-
-
+        //Si definiscono le azioni da eseguire e i controlli da fare quando una nuova lingua di origine viene scelta dallo spinner
         lingua1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -633,6 +601,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Si definiscono le azioni da eseguire e i controlli da fare quando una nuova lingua di destinazione viene scelta dallo spinner
         lingua2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -677,7 +646,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        //Si gestiscono le animazioni della prima edittext boxInserimento
         boxInserimento.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -691,20 +660,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-/*
-        editText1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(avanti == false) {
-                    animationAvanti.start();
-                    avanti = true;
-                }else{
-                    animationIndietro.start();
-                    avanti = false;
-                }
-            }
-        });*/
 
+        //Si inserisce un textWatcher sulla prima edittext così da tenere traccia dei cambiamenti del testo via via
         boxInserimento.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -726,12 +683,12 @@ public class MainActivity extends AppCompatActivity {
                     if(lingueVocali.get(lingua1.getSelectedItem()) != null) {
                         suono1.setVisibility(View.VISIBLE);
                         button3.setClickable(true);
-                        Log.e("SIUM1: ", "Sono stato dal barbiere1, " + lingua1.getSelectedItem().toString());
+
 
                     }else {
                         suono1.setVisibility(View.INVISIBLE);
                         button3.setClickable(false);
-                        Log.e("SIUM2: ", "Sono stato dal dentista2, " + lingueVocali.get(lingua1.getSelectedItem()));
+
 
                     }
                     inseritoQualcosa = true;
@@ -740,7 +697,7 @@ public class MainActivity extends AppCompatActivity {
                     suono1.setVisibility(View.GONE);
                     button3.setClickable(false);
                     inseritoQualcosa = false;
-                    Log.e("KEKZ: ", "Sono stato dal dentista965");
+
                 }
 
             }
@@ -749,11 +706,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    //Metodo per ripetere vocalmente il messaggio passato come parametro nella lingua passata anch'essa come parametro
     private void ripeti(int lingua1oLingua2, String lingua) {
-
-        System.out.println("lingua: " + lingua);
-
-
 
         int result = 0;
         switch(lingua){
@@ -786,7 +741,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-            //Log.e("TTS", "Linguaggio non supportato");
+
             Toast.makeText(MainActivity.this, "Linguaggio non supportato", Toast.LENGTH_LONG).show();
 
         } else {
@@ -802,6 +757,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    //Si rimuove il focus dalla editText boxInserimento ogni qual volta venga cliccato qualcos'altro nella pagina
+    //Metodo invocato in quasi ogni onClickListener per l'appunto
     public void removeFocus(){
         boxInserimento.clearFocus();
         float scale = getResources().getDisplayMetrics().density;
@@ -813,6 +771,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Metodo per spostare il testo delle editText in relazione con le animazioni
     public void spostaTesto(){
 
         boxInserimento.setPadding(125,10,125,0);

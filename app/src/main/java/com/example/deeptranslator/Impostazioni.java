@@ -32,6 +32,7 @@ public class Impostazioni extends AppCompatActivity {
         lingua2 =  findViewById(R.id.LinguaPrefDest);
         authKey =  findViewById(R.id.TestoAuthKey);
 
+        //bottone per andare nella schermata della cronologia
         Button buttonCronologia = findViewById(R.id.buttonCronologia);
         buttonCronologia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +42,7 @@ public class Impostazioni extends AppCompatActivity {
             }
         });
 
+        //bottone per salvare
         buttonSalva = findViewById(R.id.buttonSalva);
         Button buttonIndietro = findViewById(R.id.pulsanteIndietro);
         buttonIndietro.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +64,7 @@ public class Impostazioni extends AppCompatActivity {
         lingua1.setAdapter(adapter1);
         lingua2.setAdapter(adapter2);
 
-
+        //shared preferences per salvare le impostazioni
         sp = getSharedPreferences("impostazioni",MODE_PRIVATE);
         int sl = sp.getInt("source_lang",0);
         int tl = sp.getInt("target_lang",1);
@@ -81,7 +83,7 @@ public class Impostazioni extends AppCompatActivity {
 
 
     }
-
+    //metodo dentro cui si usano shared preferences per salvare le impostazioni
     public void salva(){
         int source_lang = lingua1.getSelectedItemPosition();
         int target_lang = lingua2.getSelectedItemPosition();
