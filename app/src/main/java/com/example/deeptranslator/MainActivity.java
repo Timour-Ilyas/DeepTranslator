@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String,String> lingueVocali;
 
     private boolean inseritoQualcosa = false;
+    boolean tradotto = false;
     public static String[] lingua1Array;
     public static String[] lingua2Array;
 
@@ -373,28 +374,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 removeFocus();
-                if(inseritoQualcosa) {
-                    if (lingua1.getSelectedItemPosition() != 0) {
-                        int pos;
-                        String appoggio = boxInserimento.getText().toString();
-                        String appoggioTesto = testo1;
 
-                        pos = lingua1.getSelectedItemPosition();
-                        scambiato = true;
+                if (lingua1.getSelectedItemPosition() != 0) {
+                    int pos;
+                    pos = lingua1.getSelectedItemPosition();
+                    scambiato = true;
 
-                        lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
-                        boxInserimento.setText(boxTradotto.getText().toString());
-                        testo1 = testo2;
+                    lingua1.setSelection(lingua2.getSelectedItemPosition() + 1);
 
-                        lingua2.setSelection(pos - 1);
-                        boxTradotto.setText(appoggio);
-                        testo2 = appoggioTesto;
-                    } else {
-                        Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }Toast.makeText(MainActivity.this, "Inserisci il testo da tradurre",
-                        Toast.LENGTH_LONG).show();
+                    lingua2.setSelection(pos - 1);
+
+                } else {
+                    Toast.makeText(MainActivity.this, "Per poter scambiare scegli la lingua di partenza",
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -518,7 +512,7 @@ public class MainActivity extends AppCompatActivity {
                                         testo2 = boxTradotto.getText().toString();
 
                                         aggiungiTraduzione();
-
+                                        tradotto = true;
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -658,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 tvLingua2.setText(lingua2.getSelectedItem().toString());
-                if(inseritoQualcosa){
+                if(tradotto){
                     if (lingueVocali.get(lingua2.getSelectedItem().toString()) != null) {
                         suono2.setVisibility(View.VISIBLE);
                         button4.setClickable(true);
